@@ -1,0 +1,16 @@
+version: '3'
+name: paltable-dev
+services:
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile.dev
+    volumes:
+      - ./:/app
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - CHOKIDAR_USEPOLLING=true
+    command: bash -c "npm install && npm start"
