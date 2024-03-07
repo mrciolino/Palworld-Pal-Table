@@ -1,549 +1,1362 @@
-const strongAgainst = {
-    Fire: 'Grass',
-    Grass: 'Water',
-    Water: 'Fire',
-    Electric: 'Water',
-    Ice: 'Grass',
-    Ground: 'Electric',
-    Dragon: 'Dragon',
-    Dark: 'Neutral',
-    Neutral: 'Neutral',
-};
+const strongAgainst = { Fire: 'Grass-Ice', Grass: 'Ground', Ground: 'Electric', Electric: 'Water', Water: 'Fire-Electric', Ice: 'Dragon', Dragon: 'Dark', Dark: 'Neutral', Neutral: 'None' };
+const weakAgainst = { Fire: 'Water', Grass: 'Fire', Ground: 'Grass', Electric: 'Ground', Water: 'Ice', Ice: 'Fire', Dragon: 'Ice', Dark: 'Dragon', Neutral: 'Dark' };
+const Elements = ["Dark", "Dragon", "Electric", "Fire", "Grass", "Ground", "Ice", "Neutral", "Water"];
+const Professions = ["Cooling", "Electricity", "Farming", "Gathering", "Handiwork", "Kindling", "Lumbering", "Medicine", "Mining", "Planting", "Transporting", "Watering",];
 
-const weakAgainst = {
-    Fire: 'Water',
-    Grass: 'Electric',
-    Water: 'Grass',
-    Electric: 'Ground',
-    Ice: 'Fire',
-    Ground: 'Water',
-    Dragon: 'Dragon',
-    Dark: 'Neutral',
-    Neutral: 'Neutral',
-};
-
-const professions = ["Cooling", "Farming", "Gathering", "Electricity", "Handiwork", "Kindling", "Lumbering", "Medicine", "Mining", "Planting", "Transporting", "Watering"];
-
-
-const partnerSkills = {
-    'Aerial Marauder': {
-        description: 'Increases the player\'s damage dealt to enemy weak points while mounted.',
-        pal: ['Vanwyrm', 'Vanwyrm Cryst']
-    },
-    'Aerial Missile': {
-        description: 'Allows you to mount Jetragon and have it fire a series of homing missiles while mounted.',
-        pal: ['Jetragon']
-    },
-    'Amicable Holy Dragon': {
-        description: 'While Elphidran is your active Pal, it increases the amount of items Dark Pals drop when defeated.',
-        pal: ['Elphidran']
-    },
-    'Amicable Water Dragon': {
-        description: 'While Elphidran Aqua is your active Pal, it increases the amount of items Fire Pals drop when defeated.',
-        pal: ['Elphidran Aqua']
-    },
-    'Angry Shark': {
-        description: 'Unleashes a powerful attack when activated. Passively powers up the player\'s attack while this Pal is in the party.',
-        pal: ['Gobfin', 'Gobfin Ignis']
-    },
-    'Antigravity': {
-        description: 'Increases the player\'s max carrying capacity by a moderate amount while Lunaris is on the team.',
-        pal: ['Lunaris']
-    },
-    'Aqua Spout': {
-        description: 'While Kelpsea is in your party, the attack of your active Water Pal is increased.',
-        pal: ['Kelpsea']
-    },
-    'Aurora Guide': {
-        description: 'While Foxcicle is in your party, the attack of your Ice Pals is powered up.',
-        pal: ['Foxcicle']
-    },
-    'Berry Picker': {
-        description: 'When assigned to the Ranch, Caprity produces Berries.',
-        pal: ['Caprity']
-    },
-    'Black Ankylosaur': {
-        description: 'Improves the player\'s mining efficiency while riding Astegon.',
-        pal: ['Astegon']
-    },
-    'Black Hare': {
-        description: 'Increases the player\'s attack significantly and changes the player\'s damage type to Dark while mounting Pyrin Noct.',
-        pal: ['Pyrin Noct']
-    },
-    'Black Steed': {
-        description: 'Converts the player\'s attacks to deal Dark damage instead and increases the Dark damage dealt by the player and Frostallion Noct while mounted. Enables Frostallion Noct to be mounted.',
-        pal: ['Frostallion Noct']
-    },
-    'Blessing of the Flower Spirit': {
-        description: 'Petallia heals the player for a set amount per level when activated.',
-        pal: ['Petallia']
-    },
-    'Brandish Blade': {
-        description: 'Bushi dashes towards a target Pal and performs a powerful slash.',
-        pal: ['Bushi']
-    },
-    'Brave Sailor': {
-        description: 'While Penking is your active Pal, it increases the amount of items Fire Pals drop when defeated.',
-        pal: ['Penking']
-    },
-    'Caffeine Inoculation': {
-        description: 'Depresso gains a sudden burst of energy which increases its movement speed. The movement speed bonus increases for each level Caffeine Inoculation.',
-        pal: ['Depresso']
-    },
-    'Candy Pop': {
-        description: 'When assigned to the Ranch, Woolipop produces Cotton Candy.',
-        pal: ['Woolipop']
-    },
-    'Cat Helper': {
-        description: 'Increases the player\'s max carrying capacity by a small amount while Cattiva is on the team.',
-        pal: ['Cattiva']
-    },
-    'Cheery Rifle': {
-        description: 'Tanzee arms itself with an assault rifle and shoots enemies in range, dealing neutral element damage for the skill\'s duration.',
-        pal: ['Tanzee']
-    },
-    'Claws Glistening in the Dark': {
-        description: 'Loupmoon leaps and attacks the target enemy.',
-        pal: ['Loupmoon']
-    },
-    'Clear Mind': {
-        description: 'Increases base mount speed and enables mounting for Kitsun. Ignores cold and hot environment effects while mounted.',
-        pal: ['Kitsun']
-    },
-    'Cold Bomb': {
-        description: 'Equips Jolthog Cryst in the player\'s hand. When thrown, it creates a large cold explosion on impact, dealing damage and freezing enemies hit, making them easier to catch. The damage increases for each level of Cold Bomb.',
-        pal: ['Jolthog Cryst']
-    },
-    'Cool Body': {
-        description: 'Increases base mount speed and enables mounting for Reindrix. Keeps the rider cool in hot environments.',
-        pal: ['Reindrix']
-    },
-    'Dark Knight of the Abyss': {
-        description: 'Increases base mount speed and enables mounting for Necromus. Allows Necromus to double jump while mounted.',
-        pal: ['Necromus']
-    },
-    'Dark Knowledge': {
-        description: 'While Hoocrates is in your party, your active Dark Pal\'s attack is increased. The bonus damage is increased per level of Dark Knowledge.',
-        pal: ['Hoocrates']
-    },
-    'Darkclaw Hunter': {
-        description: 'Incineram Noct attacks the target enemy with the Hellfire Claw skill, damaging and burning the enemy.',
-        pal: ['Incineram Noct']
-    },
-    'Darkflame Lion': {
-        description: 'While Blazehowl Noct is your active Pal, increases the amount of items Neutral Pals drop when defeated.',
-        pal: ['Blazehowl Noct']
-    },
-    'Dig Here!': {
-        description: 'When grazing in the Ranch, Vixy occasionally finds Pals Spheres, Arrows, and Gold. Vixy can also find Mega Pal Spheres with at least 4 levels in Dig Here.',
-        pal: ['Vixy']
-    },
-    'Direhowl Rider': {
-        description: 'Increases mount speed and enables mounting for Direhowl.',
-        pal: ['Direhowl']
-    },
-    'Dragon Hunter': {
-        description: 'While Cryolinx is your active Pal, increases the amount of items Dragon Pals drop when defeated.',
-        pal: ['Cryolinx']
-    },
-    'Dream Chaser': {
-        description: 'Daedream accompanies you and follows up your attacks with dark magic that increase in damage for each level of Dream Chaser while it is in your party and not set as your active Pal.',
-        pal: ['Daedream']
-    },
-    'Drill Crusher': {
-        description: 'When activated, Digtoise spins and mines ores with increased efficiency. Shell Spin\'s power is also powered up.',
-        pal: ['Digtoise']
-    },
-    'Egg Layer': {
-        description: 'When assigned to the Ranch, Chikipi produces Eggs.',
-        pal: ['Chikipi']
-    },
-    'Eggbomb Launcher': {
-        description: 'Requires Tocotoco\'s Gloves. While Tocotoco is the active Pal, activate its Partner Skill and it will hop onto the player\'s arms and will act as a grenade launcher that shoots explosive eggs.',
-        pal: ['Tocotoco']
-    },
-    'Ferocious Thunder Dragon': {
-        description: 'While Orserk is your active Pal, it increases the amount of items Water Pals drop when defeated.',
-        pal: ['Orserk']
-    },
-    'Flame Wing': {
-        description: 'Increases the player\'s attack significantly and changes the player\'s damage type to Fire while mounting Ragnahawk.',
-        pal: ['Ragnahawk']
-    },
-    'Flameclaw Hunter': {
-        description: 'Incineram attacks the target enemy with the Hellfire Claw skill, damaging and burning the enemy.',
-        pal: ['Incineram']
-    },
-    'Fluffy': {
-        description: 'While in your party, increases Sweepa\'s attack and defense.',
-        pal: ['Swee']
-    },
-    'Fluffy Shield': {
+const paldeckData = [
+    {
+        name: 'Lamball',
+        paldeck: '001',
+        element: 'Neutral',
+        skill: 'Fluffy Shield',
+        drops: 'Wool, Lamball Mutton',
+        image: 'assets/images/pals/Lamball-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Farming: 1,
         description: 'Allows Lamball to be used as a shield. When assigned to the Ranch, Lamball produces Wool.',
-        pal: ['Lamball']
+        type: 'Combat / Farming'
     },
-    'Fluffy Wool': {
+    {
+        name: 'Cattiva',
+        paldeck: '002',
+        element: 'Neutral',
+        skill: 'Cat Helper',
+        drops: 'Red Berries',
+        image: 'assets/images/pals/Cattiva-1.webp',
+        Handiwork: 1,
+        Gathering: 1,
+        Mining: 1,
+        Transporting: 1,
+        description: "Increases the player's max carrying capacity by a small amount while Cattiva is on the team.",
+        type: 'Utility'
+    },
+    {
+        name: 'Chikipi',
+        paldeck: '003',
+        element: 'Neutral',
+        skill: 'Egg Layer',
+        drops: 'Egg, Chikipi Poultry',
+        image: 'assets/images/pals/Chikipi-1.webp',
+        Gathering: 1,
+        Farming: 1,
+        description: 'When assigned to the Ranch, Chikipi produces Eggs.',
+        type: 'Farming'
+    },
+    {
+        name: 'Lifmunk',
+        paldeck: '004',
+        element: 'Grass',
+        skill: 'Lifmunk Recoil',
+        drops: 'Berry Seeds, Low-grade Medical Supplies',
+        image: 'assets/images/pals/Lifmunk-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Lumbering: 1,
+        Medicine: 1,
+        Gathering: 1,
+        description: "Requires Lifmunk's Submachine Gun. While Lifmunk is the active Pal, activate its Partner Skill and it will ride on the player's head, shooting a submachine gun as the player attacks.",
+        type: 'Combat'
+    },
+    {
+        name: 'Foxparks',
+        paldeck: '005',
+        element: 'Fire',
+        skill: 'Huggy Fire',
+        drops: 'Leather, Flame Organ',
+        image: 'assets/images/pals/Foxparks-1.webp',
+        Kindling: 1,
+        description: "Requires Foxparks's Harness. While Foxparks is the active Pal, activate its Partner Skill and it will hop onto the player's arms and will act as a flamethrower, replacing the player's weapon for the duration.",
+        type: 'Combat'
+    },
+    {
+        name: 'Fuack',
+        paldeck: '006',
+        element: 'Water',
+        skill: 'Surfing Slam',
+        drops: 'Leather, Pal Fluids',
+        image: 'assets/images/pals/Fuack-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Watering: 1,
+        description: 'Fuack slides at high speeds and hits the opponent, dealing Water elemental damage and soaks them in water.',
+        type: 'Combat'
+    },
+    {
+        name: 'Sparkit',
+        paldeck: '007',
+        element: 'Electric',
+        skill: 'Static Electricity',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Sparkit-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Generating: 1,
+        description: "While Sparkit is in your party, your active Electric Pal's attack is increased.",
+        type: 'Utility'
+    },
+    {
+        name: 'Tanzee',
+        paldeck: '008',
+        element: 'Grass',
+        skill: 'Cheery Rifle',
+        drops: 'Mushroom',
+        image: 'assets/images/pals/Tanzee-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Lumbering: 1,
+        Transporting: 1,
+        Gathering: 1,
+        description: "Tanzee arms itself with an assault rifle and shoots enemies in range, dealing neutral element damage for the skill's duration.",
+        type: 'Combat'
+    },
+    {
+        name: 'Rooby',
+        paldeck: '009',
+        element: 'Fire',
+        skill: 'Tiny Spark',
+        drops: 'Flame Organ, Leather',
+        image: 'assets/images/pals/Rooby-1.webp',
+        Kindling: 1,
+        description: "While Rooby is in your party, your active Fire Pal's attack is increased.",
+        type: 'Utility'
+    },
+    {
+        name: 'Pengullet',
+        paldeck: '010',
+        element: 'Water-Ice',
+        skill: 'Pengullet Cannon',
+        drops: 'Ice Organ, Pal Fluids',
+        image: 'assets/images/pals/Pengullet-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Watering: 1,
+        Cooling: 1,
+        description: 'Arms a rocket launcher using Pengullet as ammo. On impact, Pengullet explodes and suffers lethal damage in exchange for dealing Neutral element damage, stunning any enemies it hits in a large area.',
+        type: 'Combat'
+    },
+    {
+        name: 'Penking',
+        paldeck: '011',
+        element: 'Water-Ice',
+        skill: 'Brave Sailor',
+        drops: 'Ice Organ, Penking Plume',
+        image: 'assets/images/pals/Penking-1.webp',
+        Handiwork: 2,
+        Transporting: 2,
+        Watering: 2,
+        Mining: 2,
+        Cooling: 2,
+        description: 'While Penking is your active Pal, it increases the amount of items Fire Pals drop when defeated.',
+        type: 'Utility'
+    },
+    {
+        name: 'Jolthog',
+        paldeck: '012',
+        element: 'Electric',
+        skill: 'Jolt Bomb',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Jolthog-1.webp',
+        Generating: 1,
+        description: "Equips Jolthog in the player's hand. When thrown, it creates a large electric explosion on impact, dealing damage and shocking enemies hit which stuns them and makes them easier to catch for a moment. The damage increases for each level of Jolt Bomb.",
+        type: 'Combat'
+    },
+    {
+        name: 'Jolthog Cryst',
+        paldeck: '012b',
+        element: 'Ice',
+        skill: 'Cold Bomb',
+        drops: 'Ice Organ',
+        image: 'assets/images/pals/Jolthog Cryst-1.webp',
+        Cooling: 1,
+        description: "Equips Jolthog Cryst in the player's hand. When thrown, it creates a large cold explosion on impact, dealing damage and freezing enemies hit, making them easier to catch. The damage increases for each level of Cold Bomb.",
+        type: 'Unknown',
+        Combat: 'Combat'
+    },
+    {
+        name: 'Gumoss',
+        paldeck: '013',
+        element: 'Grass',
+        skill: 'Logging Assistance',
+        drops: 'Berry Seeds, Gumoss Leaf',
+        image: 'assets/images/pals/Gumoss-1.webp',
+        Planting: 1,
+        description: "Increases the player's logging efficiency while Gumoss is in the party.",
+        type: 'Utility'
+    },
+    {
+        name: 'Vixy',
+        paldeck: '014',
+        element: 'Neutral',
+        skill: 'Dig Here!',
+        drops: 'Leather, Bone',
+        image: 'assets/images/pals/Vixy-1.webp',
+        Gathering: 1,
+        Farming: 1,
+        description: 'When grazing in the Ranch, Vixy occasionally finds Pals Spheres, Arrows, and Gold. Vixy can also find Mega Pal Spheres with at least 4 levels in Dig Here.',
+        type: 'Farming'
+    },
+    {
+        name: 'Hoocrates',
+        paldeck: '015',
+        element: 'Dark',
+        skill: 'Dark Knowledge',
+        drops: 'Fiber, High-grade Technical Manual',
+        image: 'assets/images/pals/Hoocrates-1.webp',
+        Gathering: 1,
+        description: "While Hoocrates is in your party, your active Dark Pal's attack is increased. The bonus damage is increased per level of Dark Knowledge.",
+        type: 'Utility'
+    },
+    {
+        name: 'Teafant',
+        paldeck: '016',
+        element: 'Water',
+        skill: 'Soothing Shower',
+        drops: 'Pal Fluids',
+        image: 'assets/images/pals/Teafant-1.webp',
+        Watering: 1,
+        description: 'Teafant heals the player for a set amount per level of Soothing Shower when activated.',
+        type: 'Utility'
+    },
+    {
+        name: 'Depresso',
+        paldeck: '017',
+        element: 'Dark',
+        skill: 'Caffeine Inoculation',
+        drops: 'Venom Gland',
+        image: 'assets/images/pals/Depresso-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Mining: 1,
+        description: 'Depresso gains a sudden burst of energy which increases its movement speed. The movement speed bonus increases for each level Caffeine Inoculation.',
+        type: 'Utility'
+    },
+    {
+        name: 'Cremis',
+        paldeck: '018',
+        element: 'Neutral',
+        skill: 'Fluffy Wool',
+        drops: 'Wool',
+        image: 'assets/images/pals/Cremis-1.webp',
+        Gathering: 1,
+        Farming: 1,
         description: 'Powers up the attack of Neutral Pals in the party while Cremis is in the party. When assigned to the Ranch, Cremis produces Wool.',
-        pal: ['Cremis']
+        type: 'Combat / Farming'
     },
-    'Flying Trapeze': {
-        description: 'Allows Hangyu to be used as a glider. Hangyu gives the player a short upward burst when used. Each level increases the base gliding speed and decreases stamina drain and the rate at which you fall while gliding.',
-        pal: ['Hangyu']
+    {
+        name: 'Daedream',
+        paldeck: '019',
+        element: 'Dark',
+        skill: 'Dream Chaser',
+        drops: 'Venom Gland, Small Pal Soul',
+        image: 'assets/images/pals/Daedream-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Gathering: 1,
+        description: 'Daedream accompanies you and follows up your attacks with dark magic that increase in damage for each level of Dream Chaser while it is in your party and not set as your active Pal.',
+        type: 'Combat'
     },
-    'Fragrant Dragon': {
-        description: 'Increases the Grass damage dealt by the player and Dinossom while mounted. Enables Dinossom to be mounted.',
-        pal: ['Dinossom']
+    {
+        name: 'Rushoar',
+        paldeck: '020',
+        element: 'Ground',
+        skill: 'Hard Head',
+        drops: 'Rushoar Pork, Leather, Bone',
+        image: 'assets/images/pals/Rushoar-1.webp',
+        Mining: 1,
+        description: "Increases player's mining efficiency while riding Rushoar.",
+        type: 'Mount'
     },
-    'Fried Squid': {
+    {
+        name: 'Nox',
+        paldeck: '021',
+        element: 'Dark',
+        skill: 'Kuudere',
+        drops: 'Leather, Small Pal Soul',
+        image: 'assets/images/pals/Nox-1.webp',
+        Gathering: 1,
+        description: "When fighting together with Nox, powers up player attack by a small amount and changes the player's damage type to Dark.",
+        type: 'Combat'
+    },
+    {
+        name: 'Fuddler',
+        paldeck: '022',
+        element: 'Ground',
+        skill: 'Ore Detector',
+        drops: 'Leather',
+        image: 'assets/images/pals/Fuddler-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Mining: 1,
+        description: 'When activated, Fuddler scans for mineable mineral deposits within a 100m radius and highlights them on your compass. Higher levels of the skill expand the area of the scan.',
+        type: 'Utility'
+    },
+    {
+        name: 'Killamari',
+        paldeck: '023',
+        element: 'Dark',
+        skill: 'Fried Squid',
+        drops: 'Venom Gland',
+        image: 'assets/images/pals/Killamari-1.webp',
+        Transporting: 2,
+        Gathering: 1,
         description: 'Allows Killamari to be used as a glider. Each level increases the base gliding speed, and decreases stamina drain and the rate at which you fall while gliding.',
-        pal: ['Killamari']
+        type: 'Glider'
     },
-    'Full-power Gorilla Mode': {
-        description: 'When activated, it significantly increases Gorirat\'s attack temporarily.',
-        pal: ['Gorirat']
+    {
+        name: 'Mau',
+        paldeck: '024',
+        element: 'Dark',
+        skill: 'Gold Digger',
+        drops: 'Gold Coin',
+        image: 'assets/images/pals/Mau-1.webp',
+        Farming: 1,
+        type: 'Farming'
     },
-    'Gaia Crusher': {
-        description: 'Improves the player\'s mining and logging efficiency while riding Mammorest.',
-        pal: ['Mammorest']
+    {
+        name: 'Mau Cryst',
+        paldeck: '024b',
+        element: 'Ice',
+        skill: 'Gold Digger',
+        drops: 'Ice Organ, Sapphire',
+        image: 'assets/images/pals/Mau Cryst-1.webp',
+        Cooling: 1,
+        Farming: 1,
+        type: 'Farming'
     },
-    'Galeclaw Rider': {
-        description: 'Allows Galeclaw to be used as a glider. Each level increases the base gliding speed and decreases stamina drain and the rate at which you fall while gliding. Guns can be fired while gliding with Galeclaw.',
-        pal: ['Galeclaw']
+    {
+        name: 'Celaray',
+        paldeck: '025',
+        element: 'Water',
+        skill: 'Zephyr Glider',
+        drops: 'Pal Fluids',
+        image: 'assets/images/pals/Celaray-1.webp',
+        Transporting: 1,
+        Watering: 1,
+        description: 'Allows Celaray to be used as a glider. Each level increases the base gliding speed and decreases stamina drain and the rate at which you fall while gliding.',
+        type: 'Glider'
     },
-    'Goddess of the Tranquil Light': {
-        description: 'Lyleen Noct heals the player for a set amount per level when activated.',
-        pal: ['Lyleen Noct']
+    {
+        name: 'Direhowl',
+        paldeck: '026',
+        element: 'Neutral',
+        skill: 'Direhowl Rider',
+        drops: 'Leather, Ruby, Gold Coin',
+        image: 'assets/images/pals/Direhowl-1.webp',
+        Gathering: 1,
+        description: 'Increases mount speed and enables mounting for Direhowl.',
+        type: 'Mount'
     },
-    'Gold Digger': {
-        description: 'When assigned to the Ranch, Mau produces Gold Coins.',
-        pal: ['MauMau Cryst']
+    {
+        name: 'Tocotoco',
+        paldeck: '027',
+        element: 'Neutral',
+        skill: 'Eggbomb Launcher',
+        drops: 'Gunpowder, Tocotoco Feather',
+        image: 'assets/images/pals/Tocotoco-1.webp',
+        Gathering: 1,
+        description: "Requires Tocotoco's Gloves. While Tocotoco is the active Pal, activate its Partner Skill and it will hop onto the player's arms and will act as a grenade launcher that shoots explosive eggs.",
+        type: 'Combat'
     },
-    'Grassland Speedster': {
-        description: 'When fighting together with Verdash, increases player movement speed moderately and changes the player\'s damage type to Grass.',
-        pal: ['Verdash']
-    },
-    'Grenadier Panda': {
-        description: 'Allows Mossanda to be mounted and wield a grenade launcher. Mossanda can fire the grenade launcher multiple times to deal Neutral element damage and stun enemies in a large area.',
-        pal: ['Mossanda', 'Mossanda Lux']
-    },
-    'Grimoire Collector': {
-        description: 'While Katress is your active Pal, increases the amount of items Neutral Pals drop when defeated.',
-        pal: ['Katress']
-    },
-    'Guardian of the Desert': {
-        description: 'When fighting together with Anubis, increases player attack by a small amount and changes the player\'s damage type to Ground.',
-        pal: ['Anubis']
-    },
-    'Guardian of the Forest': {
-        description: 'Enables Eikthyrdeer to be mounted. While mounted, Eikthyrdeer can perform a double jump and player gets increased logging efficiency.',
-        pal: ['Eikthyrdeer']
-    },
-    'Guardian of the Golden Forest': {
-        description: 'Enables Eikthyrdeer Terra to be mounted. While mounted, Eikthyrdeer Terra can perform a double jump and player gets increased logging efficiency.',
-        pal: ['Eikthyrdeer Terra']
-    },
-    'Guardian of the Grassy Fields': {
-        description: 'Increases the player\'s max carrying capacity by a large amount while Wumpo Botan is on the team. Allows Wumpo Botan to be mounted.',
-        pal: ['Wumpo Botan']
-    },
-    'Guardian of the Snowy Mountain': {
-        description: 'Increases the player\'s max carrying capacity by a large amount while Wumpo is on the team. Allows Wumpo to be mounted.',
-        pal: ['Wumpo']
-    },
-    'Hard Armor': {
-        description: 'While Warsect is your active Pal, your defense and fire resistance is increased.',
-        pal: ['Warsect']
-    },
-    'Hard Head': {
-        description: 'Increases player\'s mining efficiency while riding Rushoar.',
-        pal: ['Rushoar']
-    },
-    'Harvest Goddess': {
-        description: 'Lyleen heals the player for a set amount per level when activated.',
-        pal: ['Lyleen']
-    },
-    'Hawk Eye': {
-        description: 'Increases the player\'s damage dealt to enemy weak points while fighting with Robinquill.',
-        pal: ['Robinquill', 'Robinquill Terra']
-    },
-    'Heart Drain': {
-        description: 'Lovander and the player heals for a portion of the damage they deal while fighting together.',
-        pal: ['Lovander']
-    },
-    'Hellflame Lion': {
-        description: 'While Blazehowl is your active Pal, increases the amount of items Grass Pals drop when defeated.',
-        pal: ['Blazehowl']
-    },
-    'Helper Bunny': {
+    {
+        name: 'Flopie',
+        paldeck: '028',
+        element: 'Grass',
+        skill: 'Helper Bunny',
+        drops: 'Low-grade Medical Supplies, Wheat Seeds',
+        image: 'assets/images/pals/Flopie-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Medicine: 1,
+        Transporting: 1,
+        Gathering: 1,
         description: 'Flopie accompanies you and picks up item with a certain range and adds them to your inventory.',
-        pal: ['Flopie']
+        type: 'Utility'
     },
-    'Holy Knight of the Firmament': {
-        description: 'Increases base mount speed and enables mounting for Paladius. Allows Paladius to triple jump while mounted.',
-        pal: ['Paladius']
+    {
+        name: 'Mozzarina',
+        paldeck: '029',
+        element: 'Neutral',
+        skill: 'Milk Maker',
+        drops: 'Mozzarina Meat, Milk',
+        image: 'assets/images/pals/Mozzarina-1.webp',
+        Farming: 1,
+        description: 'When assigned to the Ranch, Mozzarina produces Milk.',
+        type: 'Farming'
     },
-    'Huggy Fire': {
-        description: 'Requires Foxparks\'s Harness. While Foxparks is the active Pal, activate its Partner Skill and it will hop onto the player\'s arms and will act as a flamethrower, replacing the player\'s weapon for the duration.',
-        pal: ['Foxparks']
+    {
+        name: 'Bristla',
+        paldeck: '030',
+        element: 'Grass',
+        skill: 'Princess Gaze',
+        drops: 'Wheat Seeds, Lettuce Seeds',
+        image: 'assets/images/pals/Bristla-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Medicine: 2,
+        Transporting: 1,
+        Gathering: 1,
+        description: "While Bristla is in your party, your active Grass Pal's attack is increased.",
+        type: 'Utility'
     },
-    'Hungry Missile': {
-        description: 'Allows you to mount Relaxaurus and have it fire a series of homing missiles while mounted.',
-        pal: ['Relaxaurus']
+    {
+        name: 'Gobfin',
+        paldeck: '031',
+        element: 'Water',
+        skill: 'Angry Shark',
+        drops: 'Pal Fluids',
+        image: 'assets/images/pals/Gobfin-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Watering: 2,
+        description: "Unleashes a powerful attack when activated. Passively powers up the player's attack while this Pal is in the party.",
+        type: 'Combat / Utility'
     },
-    'Hunting Instinct': {
-        description: 'Increases the player\'s attack and movement speed moderately while hunting with Wolfotooth.',
-        pal: ['Wolfotooth']
+    {
+        name: 'Hangyu',
+        paldeck: '032',
+        element: 'Ground',
+        skill: 'Flying Trapeze',
+        drops: 'Fiber',
+        image: 'assets/images/pals/Hangyu-1.webp',
+        Handiwork: 1,
+        Transporting: 2,
+        Gathering: 1,
+        description: 'Allows Hangyu to be used as a glider. Hangyu gives the player a short upward burst when used. Each level increases the base gliding speed and decreases stamina drain and the rate at which you fall while gliding.',
+        type: 'Glider'
     },
-    'Ice Breath': {
-        description: 'While Freezalisk is in your party, the attack of your active Water Pal is increased.',
-        pal: ['Freezalisk']
+    {
+        name: 'Mossanda',
+        paldeck: '033',
+        element: 'Grass',
+        skill: 'Grenadier Panda',
+        drops: 'Mushroom, Leather, Tomato Seeds',
+        image: 'assets/images/pals/Mossanda-1.webp',
+        Planting: 2,
+        Handiwork: 2,
+        Lumbering: 2,
+        Transporting: 3,
+        description: 'Allows Mossanda to be mounted and wield a grenade launcher. Mossanda can fire the grenade launcher multiple times to deal Neutral element damage and stun enemies in a large area.',
+        type: 'Mount'
     },
-    'Ice Charger': {
-        description: 'Increases the player\'s movement speed moderately and changes the player\'s damage type to Ice while mounting Frosttail.',
-        pal: ['Frosttail']
+    {
+        name: 'Woolipop',
+        paldeck: '034',
+        element: 'Neutral',
+        skill: 'Candy Pop',
+        drops: 'Cotton Candy, High-quality Pal Oil',
+        image: 'assets/images/pals/Woolipop-1.webp',
+        Farming: 1,
+        description: 'When assigned to the Ranch, Woolipop produces Cotton Candy.',
+        type: 'Farming'
     },
-    'Icy Wind': {
-        description: 'While Snowsprite is in your party, the attack of your active Water Pal is increased.',
-        pal: ['Snowsprite']
+    {
+        name: 'Caprity',
+        paldeck: '035',
+        element: 'Grass',
+        skill: 'Berry Picker',
+        drops: 'Caprity Meat, Red Berries, Horn',
+        image: 'assets/images/pals/Caprity-1.webp',
+        Planting: 2,
+        Farming: 1,
+        description: 'When assigned to the Ranch, Caprity produces Berries.',
+        type: 'Farming'
     },
-    'Imposing Roar': {
-        description: 'While Tyrallodon is your active Pal, it increases the amount of items Ground Pals drop when defeated.',
-        pal: ['Tyrallodon']
+    {
+        name: 'Melpaca',
+        paldeck: '036',
+        element: 'Neutral',
+        skill: 'Pacapaca Wool',
+        drops: 'Wool, Leather',
+        image: 'assets/images/pals/Melpaca-1.webp',
+        Farming: 1,
+        description: 'When assigned to the Ranch, Melpaca produces Wool. Also enables Melpaca to be mounted.',
+        type: 'Mount / Farming'
     },
-    'Ironhide Shield': {
-        description: 'Increases the player\'s defense while mounted on Ironbeast.',
-        pal: ['Ironbeast']
+    {
+        name: 'Eikthyrdeer',
+        paldeck: '037',
+        element: 'Neutral',
+        skill: 'Guardian of the Forest',
+        drops: 'Eikthyrdeer Venison, Leather, Horn',
+        image: 'assets/images/pals/Eikthyrdeer-1.webp',
+        Lumbering: 2,
+        description: 'Enables Eikthyrdeer to be mounted. While mounted, Eikthyrdeer can perform a double jump and player gets increased logging efficiency.',
+        type: 'Mount'
     },
-    'Jolly Sled': {
-        description: 'Increases the player\'s movement speed significantly and enables mounting for Sleipnose. Allows Sleipnose to be mounted.',
-        pal: ['Sleipnose']
+    {
+        name: 'Nitewing',
+        paldeck: '038',
+        element: 'Neutral',
+        skill: 'Travel Companion',
+        drops: 'Leather',
+        image: 'assets/images/pals/Nitewing-1.webp',
+        Gathering: 2,
+        description: 'Increases base mount speed and enables mounting for Nitewing.',
+        type: 'Flying'
     },
-    'Laser Guardian': {
-        description: 'Requires Cyberseer\'s Robes. While Cyberseer is the active Pal, activate its Partner Skill and it will hover over the player, firing lasers at enemies in range. It replaces the player\'s weapon for the duration.',
-        pal: ['Cyberseer']
+    {
+        name: 'Ribunny',
+        paldeck: '039',
+        element: 'Neutral',
+        skill: 'Skilled Fingers',
+        drops: 'Leather, Beautiful Flower',
+        image: 'assets/images/pals/Ribunny-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Gathering: 1,
+        type: 'Combat / Utility',
+        description: 'While in team, increases attack power of Neutral Pals. While at base, increases work efficiency if working at Weapon Workbench.'
     },
-    'Leafy Protector': {
-        description: 'While Leafray is in your party, increases the defense of your active Grass Pal.',
-        pal: ['Leafray']
+    {
+        name: 'Incineram',
+        paldeck: '040',
+        element: 'Fire-Dark',
+        skill: 'Flameclaw Hunter',
+        drops: 'Horn, Leather',
+        image: 'assets/images/pals/Incineram-1.webp',
+        Kindling: 1,
+        Handiwork: 2,
+        Transporting: 2,
+        Mining: 1,
+        description: 'Incineram attacks the target enemy with the Hellfire Claw skill, damaging and burning the enemy.',
+        type: 'Combat'
     },
-    'Life Leech': {
-        description: 'Necrospear and the player heal for a portion of the damage they deal while fighting together.',
-        pal: ['Necrospear']
+    {
+        name: 'Cinnamoth',
+        paldeck: '041',
+        element: 'Grass',
+        skill: 'Mysterious Scales',
+        drops: 'Honey, Lettuce Seeds, Wheat Seeds',
+        image: 'assets/images/pals/Cinnamoth-1.webp',
+        Planting: 2,
+        Medicine: 1,
+        description: 'Cinnamoth attacks a target with the Poison Fog skill, inflicting poison on the enemy.',
+        type: 'Combat'
     },
-    'Lightning Guardian': {
-        description: 'Requires Thunderhide\'s Robes. While Thunderhide is the active Pal, activate its Partner Skill and it will hover over the player, striking enemies with lightning bolts in range. It replaces the player\'s weapon for the duration.',
-        pal: ['Thunderhide']
+    {
+        name: 'Arsox',
+        paldeck: '042',
+        element: 'Fire',
+        skill: 'Warm Body',
+        drops: 'Horn, Flame Organ',
+        image: 'assets/images/pals/Arsox-1.webp',
+        Kindling: 2,
+        Lumbering: 1,
+        description: 'Increases base mount speed and enables mounting for Arsox. Keeps the rider warm in cold environments.',
+        type: 'Mount'
     },
-    'Loyal Guardian': {
-        description: 'While Goldenoath is in your party, the attack of your active Holy Pal is increased.',
-        pal: ['Goldenoath']
+    {
+        name: 'Dumud',
+        paldeck: '043',
+        element: 'Ground',
+        skill: 'Soil Improver',
+        drops: 'Raw Dumud, High Quality Pal Oil',
+        image: 'assets/images/pals/Dumud-1.webp',
+        Transporting: 1,
+        Watering: 1,
+        Mining: 2,
+        description: "While Dumud is in your party, your active Ground Pal's attack is increased.",
+        type: 'Combat'
     },
-    'Lucky Charm': {
-        description: 'While Harapet is in your party, increases the chance of receiving rare items from enemies.',
-        pal: ['Harapet']
+    {
+        name: 'Cawgnito',
+        paldeck: '044',
+        element: 'Dark',
+        skill: 'Telepeck',
+        drops: 'Bone, Venom Gland, Small Pal Soul',
+        image: 'assets/images/pals/Cawgnito-1.webp',
+        Lumbering: 1,
+        description: 'Teleports towards the target enemy then performs a powerful attack.',
+        type: 'Combat'
     },
-    'Luminous Wing': {
-        description: 'While Sunflutter is in your party, the attack of your Ice Pals is powered up.',
-        pal: ['Sunflutter']
+    {
+        name: 'Leezpunk',
+        paldeck: '045',
+        element: 'Dark',
+        skill: 'Sixth Sense',
+        drops: 'Copper Key, Silver Key',
+        image: 'assets/images/pals/Leezpunk-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Gathering: 1,
+        description: 'When activated, scans within a 100m radius for nearby dungeons and highlights them on your map. Higher levels of the skill expand the area of the scan.',
+        type: 'Utility'
     },
-    'Lunar Guardian': {
-        description: 'While Lunaris is in your party, the attack of your active Ice Pal is increased.',
-        pal: ['Lunaris']
+    {
+        name: 'Loupmoon',
+        paldeck: '046',
+        element: 'Dark',
+        skill: 'Claws Glistening in the Dark',
+        drops: 'Bone',
+        image: 'assets/images/pals/Loupmoon-1.webp',
+        Handiwork: 2,
+        description: 'Loupmoon leaps and attacks the target enemy.',
+        type: 'Combat'
     },
-    'Magma Shell': {
-        description: 'While Moltenix is in your party, the attack of your active Fire Pal is increased.',
-        pal: ['Moltenix']
+    {
+        name: 'Galeclaw',
+        paldeck: '047',
+        element: 'Neutral',
+        skill: 'Galeclaw Rider',
+        drops: 'Galeclaw Poultry, Leather',
+        image: 'assets/images/pals/Galeclaw-1.webp',
+        Gathering: 2,
+        description: 'Allows Galeclaw to be used as a glider. Each level increases the base gliding speed and decreases stamina drain and the rate at which you fall while gliding. Guns can be fired while gliding with Galeclaw.',
+        type: 'Glider'
     },
-    'Magnetic Pull': {
-        description: 'While Magnos is in your party, increases the amount of items Electric Pals drop when defeated.',
-        pal: ['Magnos']
+    {
+        name: 'Robinquill',
+        paldeck: '048',
+        element: 'Grass',
+        skill: 'Hawk Eye',
+        drops: 'Wheat Seeds, Arrow',
+        image: 'assets/images/pals/Robinquill-1.webp',
+        Planting: 1,
+        Handiwork: 2,
+        Lumbering: 1,
+        Medicine: 1,
+        Transporting: 2,
+        Gathering: 2,
+        description: "Increases the player's damage dealt to enemy weak points while fighting with Robinquill.",
+        type: 'Utility'
     },
-    'Majestic Flight': {
-        description: 'While Silverwing is in your party, the attack of your active Electric Pal is increased.',
-        pal: ['Silverwing']
+    {
+        name: 'Gorirat',
+        paldeck: '049',
+        element: 'Neutral',
+        skill: 'Full-power Gorilla Mode',
+        drops: 'Leather, Bone',
+        image: 'assets/images/pals/Gorirat-1.webp',
+        Handiwork: 1,
+        Lumbering: 2,
+        Transporting: 3,
+        description: "When activated, it significantly increases Gorirat's attack temporarily.",
+        type: 'Utility'
     },
-    'Majestic Roar': {
-        description: 'While Aurorion is in your party, the attack of your active Electric Pal is increased.',
-        pal: ['Aurorion']
+    {
+        name: 'Beegarde',
+        paldeck: '050',
+        element: 'Grass',
+        skill: 'Worker Bee',
+        drops: 'Honey',
+        image: 'assets/images/pals/Beegarde-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Lumbering: 1,
+        Medicine: 1,
+        Transporting: 2,
+        Gathering: 1,
+        Farming: 1,
+        description: "When assigned to the Ranch, Beegarde produces Honey. Each Beegarde in the party increases Elizabee's Attack and Defense.",
+        type: 'Utility / Farming'
     },
-    'Majestic Wings': {
-        description: 'While Stormtail is in your party, the attack of your active Electric Pal is increased.',
-        pal: ['Stormtail']
+    {
+        name: 'Elizabee',
+        paldeck: '051',
+        element: 'Grass',
+        skill: 'Queen Bee Command',
+        drops: "Honey, Elizabee's Staff",
+        image: 'assets/images/pals/Elizabee-1.webp',
+        Planting: 2,
+        Handiwork: 2,
+        Lumbering: 1,
+        Medicine: 2,
+        Gathering: 2,
+        description: 'Elizabee gains a small damage increase for each level of this Partner Skill. Does not affect Beegarde.',
+        type: 'Combat'
     },
-    'Majestic Wolf': {
-        description: 'While Wolvenant is in your party, the attack of your active Neutral Pal is increased.',
-        pal: ['Wolvenant']
+    {
+        name: 'Grintale',
+        paldeck: '052',
+        element: 'Neutral',
+        skill: 'Plump Body',
+        drops: 'High-quality Pal Oil',
+        image: 'assets/images/pals/Grintale-1.webp',
+        Gathering: 2,
+        description: 'Increases the Neutral damage dealt by the player and Grintale while mounted. Enables Grintale to be mounted.',
+        type: 'Mount'
     },
-    'Mana Leech': {
-        description: 'Abysswraith and the player heal for a portion of the damage they deal while fighting together.',
-        pal: ['Abysswraith']
+    {
+        name: 'Swee',
+        paldeck: '053',
+        element: 'Ice',
+        skill: 'Fluffy',
+        drops: 'Wool',
+        image: 'assets/images/pals/Swee-1.webp',
+        Gathering: 1,
+        Cooling: 1,
+        description: "While in your party, increases Sweepa's attack and defense.",
+        type: 'Utility'
     },
-    'Marine Protector': {
-        description: 'While Aquashell is in your party, increases the defense of your active Water Pal.',
-        pal: ['Aquashell']
+    {
+        name: 'Sweepa',
+        paldeck: '054',
+        element: 'Ice',
+        skill: 'King of Fluff',
+        drops: 'Wool',
+        image: 'assets/images/pals/Sweepa-1.webp',
+        Gathering: 2,
+        Cooling: 2,
+        description: 'Unlocks the ability to mount Sweepa. Sweepa gains a small damage increase for each level of this Partner Skill. Does not affect Swee.',
+        type: 'Mount'
     },
-    'Meteor Guardian': {
-        description: 'Requires Ignition\'s Robes. While Ignition is the active Pal, activate its Partner Skill and it will hover over the player, summoning meteors to rain down on enemies in range. It replaces the player\'s weapon for the duration.',
-        pal: ['Ignition']
+    {
+        name: 'Chillet',
+        paldeck: '055',
+        element: 'Ice-Dragon',
+        skill: 'Wriggling Weasel',
+        drops: 'Leather',
+        image: 'assets/images/pals/Chillet-1.webp',
+        Gathering: 1,
+        Cooling: 1,
+        description: "Increases the player's attack significantly and changes the player's damage type to Dragon while mounting Chillet.",
+        type: 'Mount'
     },
-    'Meteor Shower': {
-        description: 'While Solair is in your party, the attack of your active Fire Pal is increased.',
-        pal: ['Solair']
+    {
+        name: 'Univolt',
+        paldeck: '056',
+        element: 'Electric',
+        skill: 'Swift Deity',
+        drops: 'Leather, Electric Organ, Horn',
+        image: 'assets/images/pals/Univolt-1.webp',
+        Lumbering: 1,
+        Generating: 2,
+        description: "Increases the player's attack significantly and changes the player's damage type to Electricity while mounting Univolt.",
+        type: 'Mount'
     },
-    'Mind Sharpen': {
-        description: 'While Nincada is in your party, the attack of your active Neutral Pal is increased.',
-        pal: ['Nincada']
+    {
+        name: 'Pyrin',
+        paldeck: '058',
+        element: 'Fire',
+        skill: 'Red Hare',
+        drops: 'Flame Organ, Leather',
+        image: 'assets/images/pals/Pyrin-1.webp',
+        Kindling: 2,
+        Lumbering: 1,
+        description: "Increases the player's attack significantly and changes the player's damage type to Fire while mounting Pyrin.",
+        type: 'Mount'
     },
-    'Moon Gaze': {
-        description: 'While Lunarion is in your party, the attack of your active Ice Pal is increased.',
-        pal: ['Lunarion']
+    {
+        name: 'Reindrix',
+        paldeck: '059',
+        element: 'Ice',
+        skill: 'Cool Body',
+        drops: 'Reindrix Venison, Leather, Horn, Ice Organ',
+        image: 'assets/images/pals/Reindrix-1.webp',
+        Lumbering: 2,
+        Cooling: 2,
+        description: 'Increases base mount speed and enables mounting for Reindrix. Keeps the rider cool in hot environments.',
+        type: 'Mount'
     },
-    'Moonlight Blessing': {
-        description: 'While Moonglow is in your party, the attack of your active Holy Pal is increased.',
-        pal: ['Moonglow']
+    {
+        name: 'Rayhound',
+        paldeck: '060',
+        element: 'Electric',
+        skill: 'Jumping Force',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Rayhound-1.webp',
+        Generating: 2,
+        description: 'Increases base mount speed and enables mounting for Rayhound. Allows Rayhound to double jump while mounted.',
+        type: 'Mount'
     },
-    'Mystical Guardian': {
-        description: 'While Magiwing is in your party, the attack of your active Electric Pal is increased.',
-        pal: ['Magiwing']
+    {
+        name: 'Dazzi',
+        paldeck: '062',
+        element: 'Electric',
+        skill: 'Lady of Lightning',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Dazzi-1.webp',
+        Handiwork: 1,
+        Transporting: 1,
+        Generating: 1,
+        description: 'Dazzi accompanies you and follows up your attacks with lightning bolts that increase in damage per Partner Skill level while it is in your party and not set as your active Pal.',
+        type: 'Combat'
     },
-    'Nebula Guardian': {
-        description: 'While Starshower is in your party, the attack of your active Electric Pal is increased.',
-        pal: ['Starshower']
+    {
+        name: 'Lunaris',
+        paldeck: '063',
+        element: 'Neutral',
+        skill: 'Antigravity',
+        drops: 'Paldium Fragment',
+        image: 'assets/images/pals/Lunaris-1.webp',
+        Handiwork: 3,
+        Transporting: 1,
+        Gathering: 1,
+        description: "Increases the player's max carrying capacity by a moderate amount while Lunaris is on the team.",
+        type: 'Utility'
     },
-    'Nether Slash': {
-        description: 'While Shadus is in your party, the attack of your active Dark Pal is increased.',
-        pal: ['Shadus']
+    {
+        name: 'Dinossom',
+        paldeck: '064',
+        element: 'Grass-Dragon',
+        skill: 'Fragrant Dragon',
+        drops: 'Wheat Seeds',
+        image: 'assets/images/pals/Dinossom-1.webp',
+        Planting: 2,
+        Lumbering: 2,
+        description: 'Increases the Grass damage dealt by the player and Dinossom while mounted. Enables Dinossom to be mounted.',
+        type: 'Combat / Mount'
     },
-    'Nourishing Winds': {
-        description: 'While Wispwind is in your party, the attack of your active Grass Pal is increased.',
-        pal: ['Wispwind']
+    {
+        name: 'Surfent',
+        paldeck: '065',
+        element: 'Water',
+        skill: 'Swift Swimmer',
+        drops: 'Pal Fluids',
+        image: 'assets/images/pals/Surfent-1.webp',
+        Watering: 2,
+        description: 'Increases base mount speed and enables mounting for Surfent. Does not consume stamina while moving on water.',
+        type: 'Swimmer'
     },
-    'Obsidian Guardian': {
-        description: 'While Nightshard is in your party, the attack of your active Dark Pal is increased.',
-        pal: ['Nightshard']
+    {
+        name: 'Maraith',
+        paldeck: '066',
+        element: 'Dark',
+        skill: 'Messenger of Death',
+        drops: 'Bone, Small Pal Soul',
+        image: 'assets/images/pals/Maraith-1.webp',
+        Gathering: 2,
+        Mining: 1,
+        description: "Increases the player's attack significantly and changes the player's damage type to Dark while mounting Maraith.",
+        type: 'Mount'
     },
-    'Oceanic Guardian': {
-        description: 'While Ocearion is in your party, the attack of your active Water Pal is increased.',
-        pal: ['Ocearion']
+    {
+        name: 'Digtoise',
+        paldeck: '067',
+        element: 'Ground',
+        skill: 'Drill Crusher',
+        drops: 'Ore, High-quality Pal Oil',
+        image: 'assets/images/pals/Digtoise-1.webp',
+        Mining: 3,
+        description: "When activated, Digtoise spins and mines ores with inreased efficiency. Shell Spin's power is also powered up.",
+        type: 'Utility'
     },
-    'Overheat': {
-        description: 'While Vulcanix is in your party, the attack of your active Fire Pal is increased.',
-        pal: ['Vulcanix']
+    {
+        name: 'Tombat',
+        paldeck: '068',
+        element: 'Dark',
+        skill: 'Ultrasonic Sensor',
+        drops: 'Leather, Small Pal Soul',
+        image: 'assets/images/pals/Tombat-1.webp',
+        Transporting: 2,
+        Gathering: 2,
+        Mining: 2,
+        description: 'When activated, Scans within a 100 meter radius for nearby Pals and highlights them on your compass. Higher levels of the skill expand the area of the scan.',
+        type: 'Utility'
     },
-}
-
-const palsData = [
-    { name: 'Lamball', paldeck: '001', element: 'Neutral', skill: 'Fluffy Shield', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Farming Lv1'], drops: ['Wool', 'Lamball Mutton'], image: 'assets/images/pals/Lamball-1.webp', Handiwork: 1, Transporting: 1, Farming: 1 },
-    { name: 'Cattiva', paldeck: '002', element: 'Neutral', skill: 'Cat Helper', profession: ['Handiwork Lv1', 'Gathering Lv1', 'Mining Lv1', 'Transporting Lv1'], drops: ['Red Berries'], image: 'assets/images/pals/Cattiva-1.webp', Handiwork: 1, Gathering: 1, Mining: 1, Transporting: 1 },
-    { name: 'Chikipi', paldeck: '003', element: 'Neutral', skill: 'Egg Layer', profession: ['Gathering Lv1', 'Farming Lv1'], drops: ['Egg', 'Chikipi Poultry'], image: 'assets/images/pals/Chikipi-1.webp', Gathering: 1, Farming: 1 },
-    { name: 'Lifmunk', paldeck: '004', element: 'Grass', skill: 'Lifmunk Recoil', profession: ['Planting Lv1', 'Handiwork Lv1', 'Lumbering Lv1', 'Medicine Lv1', 'Gathering Lv1'], drops: ['Berry Seeds', 'Low-grade Medical Supplies'], image: 'assets/images/pals/Lifmunk-1.webp', Planting: 1, Handiwork: 1, Lumbering: 1, Medicine: 1, Gathering: 1 },
-    { name: 'Foxparks', paldeck: '005', element: 'Fire', skill: 'Huggy Fire', profession: ['Kindling Lv1'], drops: ['Leather', 'Flame Organ'], image: 'assets/images/Anubis.webp', Kindling: 1 },
-    { name: 'Fuack', paldeck: '006', element: 'Water', skill: 'Surfing Slam', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Watering Lv1'], drops: ['Leather', 'Pal Fluids'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Watering: 1 },
-    { name: 'Sparkit', paldeck: '007', element: 'Electric', skill: 'Static Electricity', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Generating Electricity Lv1'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Electricity: 1 },
-    { name: 'Tanzee', paldeck: '008', element: 'Grass', skill: 'Cheery Rifle', profession: ['Planting Lv1', 'Handiwork Lv1', 'Lumbering Lv1', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Mushroom'], image: 'assets/images/Anubis.webp', Planting: 1, Handiwork: 1, Lumbering: 1, Transporting: 1, Gathering: 1 },
-    { name: 'Rooby', paldeck: '009', element: 'Fire', skill: 'Tiny Spark', profession: ['Kindling Lv1'], drops: ['Flame Organ', 'Leather'], image: 'assets/images/Anubis.webp', Kindling: 1 },
-    { name: 'Pengullet', paldeck: '010', element: 'Water-Ice', skill: 'Pengullet Cannon', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Watering Lv1', 'Cooling Lv1'], drops: ['Ice Organ', 'Pal Fluids'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Watering: 1, Cooling: 1 },
-    { name: 'Penking', paldeck: '011', element: 'Water-Ice', skill: 'Brave Sailor', profession: ['Handiwork Lv2', 'Transporting Lv2', 'Watering Lv2', 'Mining Lv2', 'Cooling Lv2'], drops: ['Ice Organ', 'Penking Plume'], image: 'assets/images/Anubis.webp', Handiwork: 2, Transporting: 2, Watering: 2, Mining: 2, Cooling: 2 },
-    { name: 'Jolthog', paldeck: '012', element: 'Electric', skill: 'Jolt Bomb', profession: ['Generating Electricity Lv1'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp', Electricity: 1 },
-    { name: 'Jolthog Cryst', paldeck: '012b', element: 'Ice', skill: 'Cold Bomb', profession: ['Cooling Lv1'], drops: ['Ice Organ'], image: 'assets/images/Anubis.webp', Cooling: 1 },
-    { name: 'Gumoss', paldeck: '013', element: 'Grass', skill: 'Logging Assistance', profession: ['Planting Lv1'], drops: ['Berry Seeds', 'Gumoss Leaf'], image: 'assets/images/Anubis.webp', Planting: 1 },
-    { name: 'Vixy', paldeck: '014', element: 'Neutral', skill: 'Dig Here!', profession: ['Gathering Lv1', 'Farming Lv1'], drops: ['Leather', 'Bone'], image: 'assets/images/Anubis.webp', Gathering: 1, Farming: 1 },
-    { name: 'Hoocrates', paldeck: '015', element: 'Dark', skill: 'Dark Knowledge', profession: ['Gathering Lv1'], drops: ['Fiber', 'High-grade Technical Manual'], image: 'assets/images/Anubis.webp', Gathering: 1 },
-    { name: 'Teafant', paldeck: '016', element: 'Water', skill: 'Soothing Shower', profession: ['Watering Lv1'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp', Watering: 1 },
-    { name: 'Depresso', paldeck: '017', element: 'Dark', skill: 'Caffeine Inoculation', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Mining Lv1'], drops: ['Venom Gland'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Mining: 1 },
-    { name: 'Cremis', paldeck: '018', element: 'Neutral', skill: 'Fluffy Wool', profession: ['Gathering Lv1', 'Farming Lv1'], drops: ['Wool'], image: 'assets/images/Anubis.webp', Gathering: 1, Farming: 1 },
-    { name: 'Daedream', paldeck: '019', element: 'Dark', skill: 'Dream Chaser', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Venom Gland', 'Small Pal Soul'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Gathering: 1 },
-    { name: 'Rushoar', paldeck: '020', element: 'Ground', skill: 'Hard Head', profession: ['Mining Lv1'], drops: ['Rushoar Pork', 'Leather', 'Bone'], image: 'assets/images/Anubis.webp', Mining: 1 },
-    { name: 'Nox', paldeck: '021', element: 'Dark', skill: 'Kuudere', profession: ['Gathering Lv1'], drops: ['Leather', 'Small Pal Soul'], image: 'assets/images/Anubis.webp', Gathering: 1 },
-    { name: 'Fuddler', paldeck: '022', element: 'Ground', skill: 'Ore Detector', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Mining Lv1'], drops: ['Leather'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Mining: 1 },
-    { name: 'Killamari', paldeck: '023', element: 'Dark', skill: 'Fried Squid', profession: ['Transporting Lv2', 'Gathering Lv1'], drops: ['Venom Gland'], image: 'assets/images/Anubis.webp', Transporting: 2, Gathering: 1 },
-    { name: 'Mau', paldeck: '024', element: 'Dark', skill: 'Gold Digger', profession: ['Farming Lv1'], drops: ['Gold Coin'], image: 'assets/images/Anubis.webp', Farming: 1 },
-    { name: 'Mau Cryst', paldeck: '024b', element: 'Ice', skill: 'Gold Digger', profession: ['Cooling Lv1', 'Farming Lv1'], drops: ['Ice Organ', 'Sapphire'], image: 'assets/images/Anubis.webp', Cooling: 1, Farming: 1 },
-    { name: 'Celaray', paldeck: '025', element: 'Water', skill: 'Zephyr Glider', profession: ['Transporting Lv1', 'Watering Lv1'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp', Transporting: 1, Watering: 1 },
-    { name: 'Direhowl', paldeck: '026', element: 'Neutral', skill: 'Direhowl Rider', profession: ['Gathering Lv1'], drops: ['Leather', 'Ruby', 'Gold Coin'], image: 'assets/images/Anubis.webp', Gathering: 1 },
-    { name: 'Tocotoco', paldeck: '027', element: 'Neutral', skill: 'Eggbomb Launcher', profession: ['Gathering Lv1'], drops: ['Gunpowder', 'Tocotoco Feather'], image: 'assets/images/Anubis.webp', Gathering: 1 },
-    { name: 'Flopie', paldeck: '028', element: 'Grass', skill: 'Helper Bunny', profession: ['Planting Lv1', 'Handiwork Lv1', 'Medicine Lv1', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Low-grade Medical Supplies', 'Wheat Seeds'], image: 'assets/images/Anubis.webp', Planting: 1, Handiwork: 1, Medicine: 1, Transporting: 1, Gathering: 1 },
-    { name: 'Mozzarina', paldeck: '029', element: 'Neutral', skill: 'Milk Maker', profession: ['Farming Lv1'], drops: ['Mozzarina Meat', 'Milk'], image: 'assets/images/Anubis.webp', Farming: 1 },
-    { name: 'Bristla', paldeck: '030', element: 'Grass', skill: 'Princess Gaze', profession: ['Planting Lv1', 'Handiwork Lv1', 'Medicine Lv2', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Wheat Seeds', 'Lettuce Seeds'], image: 'assets/images/Anubis.webp', Planting: 1, Handiwork: 1, Medicine: 2, Transporting: 1, Gathering: 1 },
-    { name: 'Gobfin', paldeck: '031', element: 'Water', skill: 'Angry Shark', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Watering Lv2'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Watering: 2 },
-    { name: 'Hangyu', paldeck: '032', element: 'Ground', skill: 'Flying Trapeze', profession: ['Handiwork Lv1', 'Transporting Lv2', 'Gathering Lv1'], drops: ['Fiber'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 2, Gathering: 1 },
-    { name: 'Mossanda', paldeck: '033', element: 'Grass', skill: 'Grenadier Panda', profession: ['Planting Lv2', 'Handiwork Lv2', 'Lumbering Lv2', 'Transporting Lv3'], drops: ['Mushroom', 'Leather', 'Tomato Seeds'], image: 'assets/images/Anubis.webp', Planting: 2, Handiwork: 2, Lumbering: 2, Transporting: 3 },
-    { name: 'Woolipop', paldeck: '034', element: 'Neutral', skill: 'Candy Pop', profession: ['Farming Lv1'], drops: ['Cotton Candy', 'High-quality Pal Oil'], image: 'assets/images/Anubis.webp', Farming: 1 },
-    { name: 'Caprity', paldeck: '035', element: 'Grass', skill: 'Berry Picker', profession: ['Planting Lv2', 'Farming Lv1'], drops: ['Caprity Meat', 'Red Berries', 'Horn'], image: 'assets/images/Anubis.webp', Planting: 2, Farming: 1 },
-    { name: 'Melpaca', paldeck: '036', element: 'Neutral', skill: 'Pacapaca Wool', profession: ['Farming Lv1'], drops: ['Wool', 'Leather'], image: 'assets/images/Anubis.webp', Farming: 1 },
-    { name: 'Eikthyrdeer', paldeck: '037', element: 'Neutral', skill: 'Guardian of the Forest', profession: ['Lumbering Lv2'], drops: ['Eikthyrdeer Venison', 'Leather', 'Horn'], image: 'assets/images/Anubis.webp', Lumbering: 2 },
-    { name: 'Nitewing', paldeck: '038', element: 'Neutral', skill: 'Travel Companion', profession: ['Gathering Lv2'], drops: ['Leather'], image: 'assets/images/Anubis.webp', Gathering: 2 },
-    { name: 'Ribunny', paldeck: '039', element: 'Neutral', skill: 'Skilled Fingers', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Leather', 'Beautiful Flower'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Gathering: 1 },
-    { name: 'Incineram', paldeck: '040', element: 'Fire-Dark', skill: 'Flameclaw Hunter', profession: ['Kindling Lv1', 'Handiwork Lv2', 'Transporting Lv2', 'Mining Lv1'], drops: ['Horn', 'Leather'], image: 'assets/images/Anubis.webp', Kindling: 1, Handiwork: 2, Transporting: 2, Mining: 1 },
-    { name: 'Cinnamoth', paldeck: '041', element: 'Grass', skill: 'Mysterious Scales', profession: ['Planting Lv2', 'Medicine Lv1'], drops: ['Honey', 'Lettuce Seeds', 'Wheat Seeds'], image: 'assets/images/Anubis.webp', Planting: 2, Medicine: 1 },
-    { name: 'Arsox', paldeck: '042', element: 'Fire', skill: 'Warm Body', profession: ['Kindling Lv2', 'Lumbering Lv1'], drops: ['Horn', 'Flame Organ'], image: 'assets/images/Anubis.webp', Kindling: 2, Lumbering: 1 },
-    { name: 'Dumud', paldeck: '043', element: 'Ground', skill: 'Soil Improver', profession: ['Transporting Lv1', 'Watering Lv1', 'Mining Lv2'], drops: ['Raw Dumud', 'High Quality Pal Oil'], image: 'assets/images/Anubis.webp', Transporting: 1, Watering: 1, Mining: 2 },
-    { name: 'Cawgnito', paldeck: '044', element: 'Dark', skill: 'Telepeck', profession: ['Lumbering Lv1'], drops: ['Bone', 'Venom Gland', 'Small Pal Soul'], image: 'assets/images/Anubis.webp', Lumbering: 1 },
-    { name: 'Leezpunk', paldeck: '045', element: 'Dark', skill: 'Sixth Sense', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Copper Key', 'Silver Key'], image: 'assets/images/Anubis.webp', Handiwork: 1, Transporting: 1, Gathering: 1 },
-    { name: 'Loupmoon', paldeck: '046', element: 'Dark', skill: 'Claws Glistening in the Dark', profession: ['Handiwork Lv2'], drops: ['Bone'], image: 'assets/images/Anubis.webp', Handiwork: 2 },
-    { name: 'Galeclaw', paldeck: '047', element: 'Neutral', skill: 'Galeclaw Rider', profession: ['Gathering Lv2'], drops: ['Galeclaw Poultry', 'Leather'], image: 'assets/images/Anubis.webp', Gathering: 2 },
-    { name: 'Robinquill', paldeck: '048', element: 'Grass', skill: 'Hawk Eye', profession: ['Planting Lv1', 'Handiwork Lv2', 'Lumbering Lv1', 'Medicine Lv1', 'Transporting Lv2', 'Gathering Lv2'], drops: ['Wheat Seeds', 'Arrow'], image: 'assets/images/Anubis.webp', Planting: 1, Handiwork: 2, Lumbering: 1, Medicine: 1, Transporting: 2, Gathering: 2 },
-    { name: 'Gorirat', paldeck: '049', element: 'Neutral', skill: 'Full-power Gorilla Mode', profession: ['Handiwork Lv1', 'Lumbering Lv2', 'Transporting Lv3'], drops: ['Leather', 'Bone'], image: 'assets/images/Anubis.webp', Handiwork: 1, Lumbering: 2, Transporting: 3 },
-    { name: 'Beegarde', paldeck: '050', element: 'Grass', skill: 'Worker Bee', profession: ['Planting Lv1', 'Handiwork Lv1', 'Lumbering Lv1', 'Medicine Lv1', 'Transporting Lv2', 'Gathering Lv1', 'Farming Lv1'], drops: ['Honey'], image: 'assets/images/Anubis.webp', Planting: 1, Handiwork: 1, Lumbering: 1, Medicine: 1, Transporting: 2, Gathering: 1, Farming: 1 },
-    { name: 'Elizabee', paldeck: '051', element: 'Grass', skill: 'Queen Bee Command', profession: ['Planting Lv2', 'Handiwork Lv2', 'Lumbering Lv1', 'Medicine Lv2', 'Gathering Lv2'], drops: ['Honey', 'Elizabee\'s Staff'], image: 'assets/images/Anubis.webp', Planting: 2, Handiwork: 2, Lumbering: 1, Medicine: 2, Gathering: 2 },
-    { name: 'Grintale', paldeck: '052', element: 'Neutral', skill: 'Plump Body', profession: ['Gathering Lv2'], drops: ['High-quality Pal Oil'], image: 'assets/images/Anubis.webp', Gathering: 2 },
-    { name: 'Swee', paldeck: '053', element: 'Ice', skill: 'Fluffy', profession: ['Gathering Lv1', 'Cooling Lv1'], drops: ['Wool'], image: 'assets/images/Anubis.webp', Gathering: 1, Cooling: 1 },
-    { name: 'Sweepa', paldeck: '054', element: 'Ice', skill: 'King of Fluff', profession: ['Gathering Lv2', 'Cooling Lv2'], drops: ['Wool'], image: 'assets/images/Anubis.webp', Gathering: 2, Cooling: 2 },
-    { name: 'Chillet', paldeck: '055', element: 'Ice-Dragon', skill: 'Wriggling Weasel', profession: ['Gathering Lv1', 'Cooling Lv1'], drops: ['Leather'], image: 'assets/images/Anubis.webp' },
-    { name: 'Univolt', paldeck: '056', element: 'Electric', skill: 'Swift Deity', profession: ['Lumbering Lv1', 'Generating Electricity Lv2'], drops: ['Leather', 'Electric Organ', 'Horn'], image: 'assets/images/Anubis.webp' },
-    { name: 'Pyrin', paldeck: '058', element: 'Fire', skill: 'Red Hare', profession: ['Kindling Lv2', 'Lumbering Lv1'], drops: ['Flame Organ', 'Leather'], image: 'assets/images/Anubis.webp' },
-    { name: 'Reindrix', paldeck: '059', element: 'Ice', skill: 'Cool Body', profession: ['Lumbering Lv2', 'Cooling Lv2'], drops: ['Reindrix Venison', 'Leather', 'Horn', 'Ice Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Rayhound', paldeck: '060', element: 'Electric', skill: 'Jumping Force', profession: ['Generating Electricity Lv2'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Dazzi', paldeck: '062', element: 'Electric', skill: 'Lady of Lightning', profession: ['Handiwork Lv1', 'Transporting Lv1', 'Generating Electricity Lv1'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Lunaris', paldeck: '063', element: 'Neutral', skill: 'Antigravity', profession: ['Handiwork Lv3', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Paldium Fragment'], image: 'assets/images/Anubis.webp' },
-    { name: 'Dinossom', paldeck: '064', element: 'Grass-Dragon', skill: 'Fragrant Dragon', profession: ['Planting Lv2', 'Lumbering Lv2'], drops: ['Wheat Seeds'], image: 'assets/images/Anubis.webp' },
-    { name: 'Surfent', paldeck: '065', element: 'Water', skill: 'Swift Swimmer', profession: ['Watering Lv2'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp' },
-    { name: 'Maraith', paldeck: '066', element: 'Dark', skill: 'Messenger of Death', profession: ['Gathering Lv2', 'Mining Lv1'], drops: ['Bone', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Digtoise', paldeck: '067', element: 'Ground', skill: 'Drill Crusher', profession: ['Mining Lv3'], drops: ['Ore', 'High-quality Pal Oil'], image: 'assets/images/Anubis.webp' },
-    { name: 'Tombat', paldeck: '068', element: 'Dark', skill: 'Ultrasonic Sensor', profession: ['Transporting Lv2', 'Gathering Lv2', 'Mining Lv2'], drops: ['Leather', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Lovander', paldeck: '069', element: 'Neutral', skill: 'Heart Drain', profession: ['Handiwork Lv2', 'Medicine Lv2', 'Transporting Lv2', 'Mining Lv1'], drops: ['Mushroom', 'Cake', 'Suspicious Juice', 'Strange Juice'], image: 'assets/images/Anubis.webp' },
-    { name: 'Flambelle', paldeck: '070', element: 'Fire', skill: 'Magma Tears', profession: ['Kindling Lv1', 'Handiwork Lv1', 'Transporting Lv1', 'Farming Lv1'], drops: ['Flame Organ', 'High-quality Pal Oil'], image: 'assets/images/Anubis.webp' },
-    { name: 'Vanwyrm', paldeck: '071', element: 'Fire-Dark', skill: 'Aerial Marauder', profession: ['Kindling Lv1', 'Transporting Lv3'], drops: ['Bone', 'Ruby', 'Gold Coin'], image: 'assets/images/Anubis.webp' },
-    { name: 'Bushi', paldeck: '072', element: 'Fire', skill: 'Brandish Blade', profession: ['Kindling Lv2', 'Handiwork Lv1', 'Lumbering Lv3', 'Transporting Lv2', 'Gathering Lv1'], drops: ['Bone', 'Ingot'], image: 'assets/images/Anubis.webp' },
-    { name: 'Beakon', paldeck: '073', element: 'Electric', skill: 'Thunderous', profession: ['Transporting Lv3', 'Generating Electricity Lv2', 'Gathering Lv1'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Ragnahawk', paldeck: '074', element: 'Fire', skill: 'Flame Wing', profession: ['Kindling Lv3', 'Transporting Lv3'], drops: ['Flame Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Katress', paldeck: '075', element: 'Dark', skill: 'Grimoire Collector', profession: ['Handiwork Lv2', 'Medicine Lv2', 'Transporting Lv1', 'Gathering Lv1'], drops: ['Bone', 'Venom Gland', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Wavetail', paldeck: '076', element: 'Water', skill: 'Raging Torrent', profession: ['Watering Lv3', 'Transporting Lv1'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp' },
-    { name: 'Kittythra', paldeck: '077', element: 'Electric', skill: 'Whisker Shock', profession: ['Handiwork Lv2', 'Generating Electricity Lv2', 'Transporting Lv2'], drops: ['Electric Organ', 'Copper Key'], image: 'assets/images/Anubis.webp' },
-    { name: 'Crackgunner', paldeck: '078', element: 'Electric', skill: 'Laser Sight', profession: ['Handiwork Lv2', 'Generating Electricity Lv1'], drops: ['Electric Organ', 'Copper Key', 'Silver Key'], image: 'assets/images/Anubis.webp' },
-    { name: 'Turbulite', paldeck: '079', element: 'Electric', skill: 'Fluffy Core', profession: ['Generating Electricity Lv1'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Xendrapod', paldeck: '080', element: 'Electric', skill: 'Cable Constrict', profession: ['Generating Electricity Lv2'], drops: ['Electric Organ', 'Copper Key'], image: 'assets/images/Anubis.webp' },
-    { name: 'Quarken', paldeck: '081', element: 'Electric', skill: 'Quantum Surge', profession: ['Generating Electricity Lv3'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Glidex', paldeck: '082', element: 'Neutral', skill: 'Wind Whisperer', profession: ['Lumbering Lv2', 'Transporting Lv2'], drops: ['Feather', 'Galeclaw Poultry'], image: 'assets/images/Anubis.webp' },
-    { name: 'Gigaleon', paldeck: '083', element: 'Neutral', skill: 'Majestic Roar', profession: ['Handiwork Lv2', 'Transporting Lv2', 'Gathering Lv2'], drops: ['Leather', 'Horn', 'Galeclaw Poultry'], image: 'assets/images/Anubis.webp' },
-    { name: 'Eclipsis', paldeck: '084', element: 'Dark', skill: 'Eclipse', profession: ['Handiwork Lv2', 'Transporting Lv2', 'Gathering Lv2'], drops: ['Venom Gland', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Frostleap', paldeck: '085', element: 'Ice', skill: 'Frozen Leap', profession: ['Cooling Lv2', 'Lumbering Lv2'], drops: ['Leather', 'Ice Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Quillara', paldeck: '086', element: 'Grass', skill: 'Quill Barrage', profession: ['Planting Lv2', 'Handiwork Lv2', 'Lumbering Lv2', 'Transporting Lv3', 'Gathering Lv2'], drops: ['Arrow', 'Lettuce Seeds'], image: 'assets/images/Anubis.webp' },
-    { name: 'Zappling', paldeck: '087', element: 'Electric', skill: 'Electrolyte Splash', profession: ['Generating Electricity Lv2', 'Gathering Lv2'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Mystique', paldeck: '088', element: 'Dark', skill: 'Eternal Night', profession: ['Gathering Lv3', 'Mining Lv2'], drops: ['Bone', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Zephyreon', paldeck: '089', element: 'Neutral', skill: 'Zephyr Grace', profession: ['Lumbering Lv3', 'Transporting Lv3', 'Gathering Lv3'], drops: ['Feather', 'Galeclaw Poultry'], image: 'assets/images/Anubis.webp' },
-    { name: 'Dewdrop', paldeck: '090', element: 'Water', skill: 'Purify', profession: ['Watering Lv2', 'Transporting Lv1'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp' },
-    { name: 'Volturex', paldeck: '091', element: 'Electric', skill: 'Plasma Wing', profession: ['Generating Electricity Lv3', 'Gathering Lv2'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Terradon', paldeck: '092', element: 'Ground', skill: 'Stone Slam', profession: ['Mining Lv2', 'Lumbering Lv3', 'Transporting Lv3'], drops: ['Ore', 'High-quality Pal Oil'], image: 'assets/images/Anubis.webp' },
-    { name: 'Bouquet', paldeck: '093', element: 'Grass', skill: 'Fragrance Burst', profession: ['Planting Lv2', 'Handiwork Lv2', 'Medicine Lv2', 'Transporting Lv2', 'Gathering Lv2'], drops: ['Flower', 'Beautiful Flower'], image: 'assets/images/Anubis.webp' },
-    { name: 'Mintaka', paldeck: '094', element: 'Grass', skill: 'Cosmic Ray', profession: ['Planting Lv3', 'Handiwork Lv3', 'Lumbering Lv3', 'Medicine Lv3', 'Transporting Lv3', 'Gathering Lv3'], drops: ['Star Piece', 'Beautiful Flower'], image: 'assets/images/Anubis.webp' },
-    { name: 'Euphony', paldeck: '095', element: 'Neutral', skill: 'Heavenly Harmony', profession: ['Handiwork Lv2', 'Transporting Lv2', 'Gathering Lv2'], drops: ['Pal Fluids', 'High-quality Pal Oil'], image: 'assets/images/Anubis.webp' },
-    { name: 'Ignis', paldeck: '096', element: 'Fire', skill: 'Inferno Roar', profession: ['Kindling Lv3', 'Transporting Lv3'], drops: ['Flame Organ', 'Ruby', 'Gold Coin'], image: 'assets/images/Anubis.webp' },
-    { name: 'Charmeleo', paldeck: '097', element: 'Fire', skill: 'Blazing Tail', profession: ['Kindling Lv2', 'Lumbering Lv2'], drops: ['Flame Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Aqualyte', paldeck: '098', element: 'Water', skill: 'Oceanic Breeze', profession: ['Watering Lv3', 'Transporting Lv2'], drops: ['Pal Fluids'], image: 'assets/images/Anubis.webp' },
-    { name: 'Sapphyre', paldeck: '099', element: 'Water', skill: 'Aqua Tail', profession: ['Watering Lv2', 'Mining Lv2'], drops: ['Pal Fluids', 'Sapphire'], image: 'assets/images/Anubis.webp' },
-    { name: 'Aerozel', paldeck: '100', element: 'Electric', skill: 'Storm Surge', profession: ['Generating Electricity Lv3', 'Gathering Lv3'], drops: ['Electric Organ', 'Copper Key'], image: 'assets/images/Anubis.webp' },
-    { name: 'Emberix', paldeck: '101', element: 'Fire', skill: 'Ember Eruption', profession: ['Kindling Lv3', 'Transporting Lv3'], drops: ['Flame Organ', 'Ruby', 'Gold Coin'], image: 'assets/images/Anubis.webp' },
-    { name: 'Aurora', paldeck: '102', element: 'Ice', skill: 'Aurora Veil', profession: ['Cooling Lv3', 'Transporting Lv3'], drops: ['Leather', 'Ice Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Dracozolt', paldeck: '103', element: 'Electric-Dragon', skill: 'Thunder Strike', profession: ['Generating Electricity Lv3'], drops: ['Electric Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Cryptkin', paldeck: '104', element: 'Dark', skill: 'Cryptic Howl', profession: ['Gathering Lv3', 'Mining Lv2'], drops: ['Bone', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Verdent', paldeck: '105', element: 'Grass', skill: 'Nature\'s Guardian', profession: ['Planting Lv3', 'Handiwork Lv3', 'Lumbering Lv3', 'Medicine Lv3', 'Transporting Lv3', 'Gathering Lv3'], drops: ['Leather', 'Berry Seeds', 'Wheat Seeds', 'Lettuce Seeds'], image: 'assets/images/Anubis.webp' },
-    { name: 'Frostsaber', paldeck: '106', element: 'Ice', skill: 'Frost Nova', profession: ['Cooling Lv3', 'Lumbering Lv3'], drops: ['Leather', 'Ice Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Abysswing', paldeck: '107', element: 'Dark', skill: 'Abyssal Flight', profession: ['Handiwork Lv3', 'Transporting Lv3', 'Gathering Lv3'], drops: ['Bone', 'Venom Gland', 'Small Pal Soul'], image: 'assets/images/Anubis.webp' },
-    { name: 'Terravolt', paldeck: '108', element: 'Electric', skill: 'Terra Shock', profession: ['Generating Electricity Lv3', 'Gathering Lv3'], drops: ['Electric Organ', 'Copper Key'], image: 'assets/images/Anubis.webp' },
-    { name: 'Solareon', paldeck: '109', element: 'Fire', skill: 'Solar Flare', profession: ['Kindling Lv3', 'Transporting Lv3'], drops: ['Flame Organ', 'Ruby', 'Gold Coin'], image: 'assets/images/Anubis.webp' },
-    { name: 'Glacieon', paldeck: '110', element: 'Ice', skill: 'Arctic Storm', profession: ['Cooling Lv3', 'Transporting Lv3'], drops: ['Leather', 'Ice Organ'], image: 'assets/images/Anubis.webp' },
-    { name: 'Voltias', paldeck: '111', element: 'Electric', skill: 'Lightning Barrage', profession: ['Generating Electricity Lv3', 'Gathering Lv3'], drops: ['Electric Organ', 'Copper Key'], image: 'assets/images/Anubis.webp' }
+    {
+        name: 'Lovander',
+        paldeck: '069',
+        element: 'Neutral',
+        skill: 'Heart Drain',
+        drops: 'Mushroom, Cake, Suspicious Juice, Strange Juice',
+        image: 'assets/images/pals/Lovander-1.webp',
+        Handiwork: 2,
+        Medicine: 2,
+        Transporting: 2,
+        Mining: 1,
+        description: 'Lovander and the player heals for a portion of the damage they deal while fighting together.',
+        type: 'Utility'
+    },
+    {
+        name: 'Flambelle',
+        paldeck: '070',
+        element: 'Fire',
+        skill: 'Magma Tears',
+        drops: 'Flame Organ, High-quality Pal Oil',
+        image: 'assets/images/pals/Flambelle-1.webp',
+        Kindling: 1,
+        Handiwork: 1,
+        Transporting: 1,
+        Farming: 1,
+        description: 'When assigned to the Ranch, Flambelle produces Flame Organs.',
+        type: 'Farming'
+    },
+    {
+        name: 'Vanwyrm',
+        paldeck: '071',
+        element: 'Fire-Dark',
+        skill: 'Aerial Marauder',
+        drops: 'Bone, Ruby, Gold Coin',
+        image: 'assets/images/pals/Vanwyrm-1.webp',
+        Kindling: 1,
+        Transporting: 3,
+        description: "Increases the player's damage dealt to enemy weak points while mounted.",
+        type: 'Flying'
+    },
+    {
+        name: 'Bushi',
+        paldeck: '072',
+        element: 'Fire',
+        skill: 'Brandish Blade',
+        drops: 'Bone, Ingot',
+        image: 'assets/images/pals/Bushi-1.webp',
+        Kindling: 2,
+        Handiwork: 1,
+        Lumbering: 3,
+        Transporting: 2,
+        Gathering: 1,
+        description: 'Bushi dashes towards a target Pal and performs a powerful slash.',
+        type: 'Combat'
+    },
+    {
+        name: 'Beakon',
+        paldeck: '073',
+        element: 'Electric',
+        skill: 'Thunderous',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Beakon-1.webp',
+        Transporting: 3,
+        Generating: 2,
+        Gathering: 1,
+        description: "Increases the player's attack significantly and changes the player's damage type to Electric while mounting Beakon.",
+        type: 'Flying'
+    },
+    {
+        name: 'Ragnahawk',
+        paldeck: '074',
+        element: 'Fire',
+        skill: 'Flame Wing',
+        drops: 'Flame Organ',
+        image: 'assets/images/pals/Ragnahawk-1.webp',
+        Kindling: 3,
+        Transporting: 3,
+        description: "Increases the player's attack significantly and changes the player's damage type to Fire while mounting Ragnahawk.",
+        type: 'Flying'
+    },
+    {
+        name: 'Katress',
+        paldeck: '075',
+        element: 'Dark',
+        skill: 'Grimoire Collector',
+        drops: 'Leather, Katress Hair, High-grade Technical Manual',
+        image: 'assets/images/pals/Katress-1.webp',
+        Handiwork: 2,
+        Medicine: 2,
+        Transporting: 2,
+        description: 'While Katress is your active Pal, increases the amount of items Neutral Pals drop when defeated.',
+        type: 'Utility'
+    },
+    {
+        name: 'Wixen',
+        paldeck: '076',
+        element: 'Fire',
+        skill: 'Lord Fox',
+        drops: 'Flame Organ, High Grade Technical Manual',
+        image: 'assets/images/pals/Wixen-1.webp',
+        Kindling: 2,
+        Handiwork: 3,
+        Transporting: 2,
+        description: "When fighting together with Wixen, increases player attack by a small amount and changes the player's damage type to Fire.",
+        type: 'Combat'
+    },
+    {
+        name: 'Verdash',
+        paldeck: '077',
+        element: 'Grass',
+        skill: 'Grassland Speedster',
+        drops: 'Leather, Bone',
+        image: 'assets/images/pals/Verdash-1.webp',
+        Planting: 2,
+        Handiwork: 3,
+        Lumbering: 2,
+        Transporting: 2,
+        Gathering: 3,
+        description: "When fighting together with Verdash, increases player movement speed moderately and changes the player's damage type to Grass.",
+        type: 'Utility / Combat'
+    },
+    {
+        name: 'Vaelet',
+        paldeck: '078',
+        element: 'Grass',
+        skill: 'Purification of Gaia',
+        drops: 'Low-grade Medical Supplies, Tomato Seeds',
+        image: 'assets/images/pals/Vaelet-1.webp',
+        Planting: 2,
+        Handiwork: 2,
+        Medicine: 3,
+        Transporting: 1,
+        Gathering: 2,
+        description: 'While Vaelet is your active Pal, it increases the amount of items Ground Pals drop when defeated.',
+        type: 'Utility'
+    },
+    {
+        name: 'Sibelyx',
+        paldeck: '079',
+        element: 'Ice',
+        skill: 'Silk Maker',
+        drops: 'TBC',
+        image: 'assets/images/pals/Sibelyx-1.webp',
+        Medicine: 2,
+        Cooling: 2,
+        Farming: 1,
+        description: 'When activated, Sibelyx attacks the targeted enemy with a powerful Blizzard Spike. When assigned to the Ranch, Sibelyx produces High Quality Cloth.',
+        type: 'Combat / Farming'
+    },
+    {
+        name: 'Elphidran',
+        paldeck: '080',
+        element: 'Dragon',
+        skill: 'Amicable Holy Dragon',
+        drops: 'High-quality Pal Oil',
+        image: 'assets/images/pals/Elphidran-1.webp',
+        Lumbering: 2,
+        description: 'While Elphidran is your active Pal, it increases the amount of items Dark Pals drop when defeated.',
+        type: 'Flying'
+    },
+    {
+        name: 'Kelpsea',
+        paldeck: '081',
+        element: 'Water',
+        skill: 'Aqua Spout',
+        drops: 'Raw Kelpsea, Pal Fluids',
+        image: 'assets/images/pals/Kelpsea-1.webp',
+        Watering: 1,
+        description: 'While Kelpsea is in your party, the attack of your active Water Pal is increased.',
+        type: 'Utility'
+    },
+    {
+        name: 'Azurobe',
+        paldeck: '082',
+        element: 'Water-Dragon',
+        skill: 'Waterwing Dance',
+        drops: 'Cloth',
+        image: 'assets/images/pals/Azurobe-1.webp',
+        Watering: 3,
+        description: "Increases the player's attack significantly and changes the player's damage type to Water while mounting Azurobe.",
+        type: 'Combat / Mount'
+    },
+    {
+        name: 'Cryolinx',
+        paldeck: '083',
+        element: 'Ice',
+        skill: 'Dragon Hunter',
+        drops: 'Ice Organ',
+        image: 'assets/images/pals/Cryolinx-1.webp',
+        Handiwork: 1,
+        Lumbering: 2,
+        Cooling: 3,
+        description: 'While Cryolinx is your active Pal, increases the amount of items Dragon Pals drop when defeated.',
+        type: 'Utility'
+    },
+    {
+        name: 'Blazehowl',
+        paldeck: '084',
+        element: 'Fire',
+        skill: 'Hellflame Lion',
+        drops: 'Flame Organ',
+        image: 'assets/images/pals/Blazehowl-1.webp',
+        Kindling: 3,
+        Lumbering: 2,
+        description: 'While Blazehowl is your active Pal, increases the amount of items Grass Pals drop when defeated.',
+        type: 'Mount / Utility'
+    },
+    {
+        name: 'Relaxaurus',
+        paldeck: '085',
+        element: 'Dragon-Water',
+        skill: 'Hungry Missile',
+        drops: 'High-quality Pal Oil, Ruby',
+        image: 'assets/images/pals/Relaxaurus-1.webp',
+        Transporting: 1,
+        Watering: 2,
+        description: 'Allows you to mount Relaxaurus and have it fire a series of rockets while mounted.',
+        type: 'Mount'
+    },
+    {
+        name: 'Broncherry',
+        paldeck: '086',
+        element: 'Grass',
+        skill: 'Overaffectionate',
+        drops: 'Broncherry Meat, Tomato Seeds',
+        image: 'assets/images/pals/Broncherry-1.webp',
+        Planting: 3,
+        description: "Increases the player's max carrying capacity by a significant amount while Broncherry is on the team. Allows Broncherry to be mounted.",
+        type: 'Mount / Utility'
+    },
+    {
+        name: 'Petallia',
+        paldeck: '087',
+        element: 'Grass',
+        skill: 'Blessing of the Flower Spirit',
+        drops: 'Beautiful Flower',
+        image: 'assets/images/pals/Petallia-1.webp',
+        Planting: 3,
+        Handiwork: 2,
+        Medicine: 2,
+        Transporting: 1,
+        Gathering: 2,
+        description: 'Petallia heals the player for a set amount per level when activated.',
+        type: 'Combat'
+    },
+    {
+        name: 'Reptyro',
+        paldeck: '088',
+        element: 'Fire-Ground',
+        skill: 'Ore-Loving Beast',
+        drops: 'Flame Organ',
+        image: 'assets/images/pals/Reptyro-1.webp',
+        Kindling: 3,
+        Mining: 3,
+        description: "Improves the player's mining efficiency while riding Reptyro.",
+        type: 'Mount'
+    },
+    {
+        name: 'Kingpaca',
+        paldeck: '089',
+        element: 'Neutral',
+        skill: 'King of Muscles',
+        drops: 'Flame Wool',
+        image: 'assets/images/pals/Kingpaca-1.webp',
+        Gathering: 1,
+        type: 'Mount'
+    },
+    {
+        name: 'Mammorest',
+        paldeck: '090',
+        element: 'Grass',
+        skill: 'Gaia Crusher',
+        drops: 'High-quality Pal Oil, Leather, Mammorest Meat',
+        image: 'assets/images/pals/Mammorest-1.webp',
+        Planting: 2,
+        Lumbering: 2,
+        Mining: 2,
+        description: "Improves the player's mining and logging efficiency while riding Mammorest.",
+        type: 'Mount'
+    },
+    {
+        name: 'Wumpo',
+        paldeck: '091',
+        element: 'Ice',
+        skill: 'Guardian of the Snowy Mountain',
+        drops: 'Ice Organ, Beautiful Flower',
+        image: 'assets/images/pals/Wumpo-1.webp',
+        Handiwork: 2,
+        Lumbering: 3,
+        Transporting: 4,
+        Cooling: 2,
+        description: "Increases the player's max carrying capacity by a large amount while Wumpo is on the team. Allows Wumpo to be mounted.",
+        type: 'Mount / Utility'
+    },
+    {
+        name: 'Warsect',
+        paldeck: '092',
+        element: 'Ground-Grass',
+        skill: 'Hard Armor',
+        drops: 'Honey',
+        image: 'assets/images/pals/Warsect-1.webp',
+        Planting: 1,
+        Handiwork: 1,
+        Lumbering: 3,
+        Transporting: 3,
+        description: 'While Warsect is your active Pal, your defense and fire resistance is increased.',
+        type: 'Combat'
+    },
+    {
+        name: 'Fenglope',
+        paldeck: '093',
+        element: 'Neutral',
+        skill: 'Wind and Clouds',
+        drops: 'Leather, Horn',
+        image: 'assets/images/pals/Fenglope-1.webp',
+        Lumbering: 2,
+        description: 'Increases base mount speed and enables mounting for Fenglope. Allows Fenglope to double jump while mounted.',
+        type: 'Mount'
+    },
+    {
+        name: 'Felbat',
+        paldeck: '094',
+        element: 'Dark',
+        skill: 'Life Steal',
+        drops: 'Cloth, Small Pal Soul',
+        image: 'assets/images/pals/Felbat-1.webp',
+        Medicine: 3,
+        description: 'Felbat and the player heals a portion of the damage they deal while fighting together.',
+        type: 'Combat'
+    },
+    {
+        name: 'Quivern',
+        paldeck: '095',
+        element: 'Dragon',
+        skill: 'Sky Dragon’s Affection',
+        drops: 'High-quality Pal Oil',
+        image: 'assets/images/pals/Quivern-1.webp',
+        Handiwork: 1,
+        Transporting: 3,
+        Gathering: 2,
+        Mining: 2,
+        description: 'Increases the Dragon damage dealt by the player and Quivern while mounted. Enables Quivern to be mounted.',
+        type: 'Flying'
+    },
+    {
+        name: 'Blazamut',
+        paldeck: '096',
+        element: 'Fire',
+        skill: 'Magma Kaiser',
+        drops: 'Coal, Flame Organ',
+        image: 'assets/images/pals/Blazamut-1.webp',
+        Kindling: 3,
+        Mining: 4,
+        description: 'Increases the Fire damage dealt by the player and Blazamut while mounted. Enables Blazamut to be mounted.',
+        type: 'Unknown'
+    },
+    {
+        name: 'Helzephyr',
+        paldeck: '097',
+        element: 'Dark',
+        skill: 'Wings of Death',
+        drops: 'Venom Gland, Medium Pal Soul',
+        image: 'assets/images/pals/Helzephyr-1.webp',
+        Transporting: 3,
+        description: "Increases the player's attack moderately and changes the player's damage type to Dark while mounting Helzephyr.",
+        type: 'Flying'
+    },
+    {
+        name: 'Astegon',
+        paldeck: '098',
+        element: 'Dragon-Dark',
+        skill: 'Black Ankylosaur',
+        drops: 'Pal Metal Ingot, Pure Quartz',
+        image: 'assets/images/pals/Astegon-1.webp',
+        Handiwork: 1,
+        Mining: 4,
+        description: "Improves the player's mining efficiency while riding Astegon.",
+        type: 'Utility / Flying'
+    },
+    {
+        name: 'Menasting',
+        paldeck: '099',
+        element: 'Dark-Ground',
+        skill: 'Steel Scorpion',
+        drops: 'Coal, Venom Gland',
+        image: 'assets/images/pals/Menasting-1.webp',
+        Lumbering: 2,
+        Mining: 3,
+        description: "Increases the player's defense and the amount of items Electric Pals drop when defeated.",
+        type: 'Mount'
+    },
+    {
+        name: 'Anubis',
+        paldeck: '100',
+        element: 'Ground',
+        skill: 'Guardian of the Desert',
+        drops: 'Bone, Large Pal Soul, Innovative Technical Manual',
+        image: 'assets/images/pals/Anubis-1.webp',
+        Handiwork: 4,
+        Transporting: 2,
+        Mining: 3,
+        description: "When fighting together with Anubis, increases player attack by a small amount and changes the player's damage type to Ground.",
+        type: 'Combat'
+    },
+    {
+        name: 'Jormuntide',
+        paldeck: '101',
+        element: 'Dragon-Water',
+        skill: 'Stormbringer Sea Dragon',
+        drops: 'Pal Fluids',
+        image: 'assets/images/pals/Jormuntide-1.webp',
+        Watering: 4,
+        description: 'Increases base mount speed and enables mounting for Jormuntide. Does not consume stamina while moving on water.',
+        type: 'Swimmer'
+    },
+    {
+        name: 'Suzaku',
+        paldeck: '102',
+        element: 'Fire',
+        skill: 'Wings of Flame',
+        drops: 'Flame Organ',
+        image: 'assets/images/pals/Suzaku-1.webp',
+        Kindling: 3,
+        description: 'Increases the Fire damage dealt by the player and Suzaku while mounted. Enables Suzaku to be mounted.',
+        type: 'Flying'
+    },
+    {
+        name: 'Grizzbolt',
+        paldeck: '103',
+        element: 'Electric',
+        skill: 'Yellow Tank',
+        drops: 'Electric Organ, Leather',
+        image: 'assets/images/pals/Grizzbolt-1.webp',
+        Handiwork: 2,
+        Lumbering: 2,
+        Transporting: 3,
+        Generating: 3,
+        description: 'Allows you to mount Grizzbolt and have it use a minigun while mounted.',
+        type: 'Combat / Mount'
+    },
+    {
+        name: 'Lyleen',
+        paldeck: '104',
+        element: 'Grass',
+        skill: 'Harvest Goddess',
+        drops: 'Low Grade Medicine, Beautiful Flower, Innovative Technical Manual',
+        image: 'assets/images/pals/Lyleen-1.webp',
+        Planting: 4,
+        Handiwork: 3,
+        Gathering: 2,
+        Medicine: 3,
+        description: 'Lyleen heals the player for a set amount per level when activated.',
+        type: 'Unknown'
+    },
+    {
+        name: 'Faleris',
+        paldeck: '105',
+        element: 'Fire',
+        skill: 'Scorching Predator',
+        drops: 'Flame Organ',
+        image: 'assets/images/pals/Faleris-1.webp',
+        Kindling: 3,
+        Transporting: 3,
+        description: 'While Faleris is your active Pal, it increases the amount of items Ice Pals drop when defeated.',
+        type: 'Flying / Utility'
+    },
+    {
+        name: 'Orserk',
+        paldeck: '106',
+        element: 'Dragon-Electric',
+        skill: 'Ferocious Thunder Dragon',
+        drops: 'Electric Organ',
+        image: 'assets/images/pals/Orserk-1.webp',
+        Generating: 4,
+        Handiwork: 2,
+        Transporting: 3,
+        description: 'While Orserk is your active Pal, it increases the amount of items Water Pals drop when defeated.',
+        type: 'Unknown'
+    },
+    {
+        name: 'Shadowbeak',
+        paldeck: '107',
+        element: 'Dark',
+        skill: 'Modified DNA',
+        drops: 'Pal Metal Ingot, Carbon Fiber, Innovative Technical Manual',
+        image: 'assets/images/pals/Shadowbeak-1.webp',
+        Gathering: 1,
+        description: 'Increases the Dark damage dealt by the player and Shadowbeak while mounted. Enables Shadowbeak to be mounted.',
+        type: 'Flying'
+    },
+    {
+        name: 'Frostallion',
+        paldeck: '110',
+        element: 'Ice',
+        skill: 'Ice Steed',
+        drops: 'Ice Organ, Diamond',
+        image: 'assets/images/pals/Frostallion-1.webp',
+        Cooling: 4,
+        description: "Converts the player's attacks to deal Ice damage instead and increases the Ice damage dealt by the player and Frostallion while mounted. Enables Frostallion to be mounted.",
+        type: 'Flying'
+    },
+    {
+        name: 'Jetragon',
+        paldeck: '111',
+        element: 'Dragon',
+        skill: 'Aerial Missile',
+        drops: 'Pure Quartz, Polymer, Carbon Fiber, Diamond',
+        image: 'assets/images/pals/Jetragon-1.webp',
+        Gathering: 3,
+        description: 'Allows you to mount Jetragon and have it fire a series of homing missiles while mounted.',
+        type: 'Flying'
+    }
 ];
 
-export { strongAgainst, weakAgainst, palsData, partnerSkills, professions };
+export { paldeckData, Elements, Professions, strongAgainst, weakAgainst };
