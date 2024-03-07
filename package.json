@@ -11,7 +11,8 @@
     "react-scripts": "4.0.3",
     "react-tooltip": "^5.26.3",
     "sass": "^1.57.1",
-    "serve": "^14.2.0"
+    "serve": "^14.2.0",
+    "yarn": "^1.22.21"
   },
   "scripts": {
     "start": "CHOKIDAR_USEPOLLING=true react-scripts start",
@@ -35,7 +36,7 @@
     ]
   },
   "devDependencies": {
-    "@iconify/react": "^4.0.1",
-    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@iconify/react": "^4.0.1"
   }
 }
