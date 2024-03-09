@@ -1,4 +1,4 @@
-FROM node:16-slim 
+FROM node:21.7.0-slim
 WORKDIR /app
 EXPOSE 3000
-RUN apt-get update && apt-get install -y python2.7 openssh-client git curl
+RUN apt-get update && apt-get install -y python3 openssh-client git curl

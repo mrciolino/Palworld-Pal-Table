@@ -3,11 +3,10 @@ import { Tooltip } from 'primereact/tooltip';
 import React from 'react';
 
 
-
 const NameImageTemplate = (product) => {
     return (
         <div className="text-center">
-            <div>{product.name}</div>
+            <div><b>{product.name}</b></div>
             <img src={product.image} alt={product.name} className="w-6rem shadow-2 border-round img-fluid" />
         </div>
     );
@@ -18,15 +17,15 @@ const PartnerSkillTemplate = (product) => {
     const sanitizedSkill = product.skill.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-_]/g, ''); // Replace spaces and remove invalid characters
     const targetClassName = `custom-target-${sanitizedSkill}-${product.paldeck}`;
     return (
-        <div className="card flex justify-content-center bg-transparent border-light">
+        <div className={`card flex justify-content-center bg-transparent border ${window.darkMode ? 'border-dark' : 'border-light'}`}>
             <Tooltip target={`.${targetClassName}`}>
                 <div style={{ maxWidth: '15rem' }}>
                     {product.description}
                 </div>
             </Tooltip>
-            <div className={`text-center ${targetClassName} p-1 text-light`}>
+            <div className={`text-center ${targetClassName} p-1 text`}>
                 {product.skill}
-                <hr className="border border-info border-2 opacity-50"></hr>
+                <hr className={`border border-2 opacity-50 ${window.darkMode ? 'border-dark' : 'border-light'}`}></hr>
                 <div className='text-center small muted'>{product.type}</div>
             </div>
         </div>
@@ -41,16 +40,6 @@ function ProfessionTemplate(product, type) {
         </div>
     );
 };
-
-function DropTemplate(product) {
-    let drop = product.drops;
-    return (
-        <div className="text-center">
-            {drop}
-        </div>
-    );
-};
-
 
 function ElementTemplate(product) {
     const targetClassName = `custom-target-${product.element}-${product.paldeck}`;
@@ -72,7 +61,7 @@ function ElementTemplate(product) {
 
     // for each element, find its strong and weak elements and add them to the strongElements and weakElements arrays and display in tooltip/icons
     return (
-        <div className="card flex justify-content-center bg-transparent border-light">
+        <div className={`card flex justify-content-center bg-transparent border ${window.darkMode ? 'border-dark' : 'border-light'}`}>
             <Tooltip target={`.${targetClassName}`}>
                 {elements.map((element, index) => {
                     return (
@@ -101,6 +90,6 @@ function ElementTemplate(product) {
             </div>
         </div >
     );
-}
+};
 
-export { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate, DropTemplate };
+export { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate };

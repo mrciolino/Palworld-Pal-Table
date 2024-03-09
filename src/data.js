@@ -308,6 +308,7 @@ const paldeckData = [
         paldeck: '024',
         element: 'Dark',
         skill: 'Gold Digger',
+        description: 'A passive skill that will cause Mau to dig up coins when assigned to a ranch.',
         drops: 'Gold Coin',
         image: 'assets/images/pals/Mau-1.webp',
         Farming: 1,
