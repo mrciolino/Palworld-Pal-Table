@@ -1,7 +1,7 @@
 const strongAgainst = { Fire: 'Grass-Ice', Grass: 'Ground', Ground: 'Electric', Electric: 'Water', Water: 'Fire-Electric', Ice: 'Dragon', Dragon: 'Dark', Dark: 'Neutral', Neutral: 'None' };
 const weakAgainst = { Fire: 'Water', Grass: 'Fire', Ground: 'Grass', Electric: 'Ground', Water: 'Ice', Ice: 'Fire', Dragon: 'Ice', Dark: 'Dragon', Neutral: 'Dark' };
 const Elements = ["Dark", "Dragon", "Electric", "Fire", "Grass", "Ground", "Ice", "Neutral", "Water"];
-const Professions = ["Cooling", "Electricity", "Farming", "Gathering", "Handiwork", "Kindling", "Lumbering", "Medicine", "Mining", "Planting", "Transporting", "Watering",];
+const Professions = ["Cooling", "Generating", "Farming", "Gathering", "Handiwork", "Kindling", "Lumbering", "Medicine", "Mining", "Planting", "Transporting", "Watering",];
 
 const paldeckData = [
     {

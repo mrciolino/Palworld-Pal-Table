@@ -13,7 +13,7 @@ Visit the website: https://paltable.onrender.com/
 </center>
 
 TODO: filtering the drops and the partner skill type
-TODO: row modal for spawn location and other information
-TODO: electric profession not filtering
+TODO: design row dialog modal
+TODO: make mobile friendly
 
 Built with React, Primereact, and Bootstrap
