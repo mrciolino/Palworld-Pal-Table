@@ -1,14 +1,12 @@
 import { strongAgainst, weakAgainst } from './data.js';
 import { Tooltip } from 'primereact/tooltip';
-import { TabView, TabPanel } from 'primereact/tabview';
-import React, { useState } from 'react';
-import 'primeicons/primeicons.css';
+import React from 'react';
 
 const NameImageTemplate = (product) => {
     return (
         <div className="text-center">
             <div><b>{product.name}</b></div>
-            <img src={product.image} alt={product.name} className="w-6rem shadow-2 border-round img-fluid" />
+            <img src={product.image} alt={product.name} className="w-6rem shadow-2 border-round img-fluid" style={{ maxWidth: '8rem', maxHeight: '8rem' }} />
         </div>
     );
 };
@@ -93,146 +91,149 @@ function ElementTemplate(product) {
     );
 };
 
-
 const PalDialogContent = ({ selectedProduct }) => {
-    const [activeIndex, setActiveIndex] = useState(0);
-
     return (
         <>
-            <div className="row">
-                <div className="col-6">
-                    <div className="text-center">
+            <div className="d-flex flex-wrap">
+
+                <div className="col-lg-6 col-sm-6 p-3">
+                    <div className="row text-center">
                         <h3>{selectedProduct.name}</h3>
                         <img src={selectedProduct.image} alt={selectedProduct.name} className="w-6rem shadow-2 border-round img-fluid" />
                     </div>
                 </div>
-                <div className="col-6">
-                    <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-                        <TabPanel header="Habitat Day">
-                            <img src="assets/images/habitat/Lamball_Day_Habitat.webp" alt="Blank" className="img-fluid" />
-                        </TabPanel>
-                        <TabPanel header="Habitat Night">
-                            <img src="assets/images/habitat/Lamball_Night_Habitat.webp" alt="Blank" className="img-fluid" />
-                        </TabPanel>
-                    </TabView>
+
+                <div className="col-lg-6 col-sm-6 p-3">
+                    <ul class="nav nav-pills mb-3 justify-content-around" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="day" data-bs-toggle="pill" data-bs-target="#pills-day" type="button" role="tab" aria-controls="pills-day" aria-selected="true">Day</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="night" data-bs-toggle="pill" data-bs-target="#pills-night" type="button" role="tab" aria-controls="pills-night" aria-selected="false">Night</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="pills-day" role="tabpanel" aria-labelledby="day">
+                            <img src="assets/images/habitat/Lamball_Day_Habitat.webp" alt="Blank" className="w-6rem shadow-2 border-round img-fluid" />
+                        </div>
+                        <div class="tab-pane fade" id="pills-night" role="tabpanel" aria-labelledby="night">
+                            <img src="assets/images/habitat/Lamball_Night_Habitat.webp" alt="Blank" className="w-6rem shadow-2 border-round img-fluid" />
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
-            <div className="row">
-                <div className='row'>
-                    <div className='col-2'>
-                        <h6>Element</h6>
+            <div className="d-flex flex-wrap">
+                <div className='row' style={{ '--bs-gutter-x': '0' }}>
+                    <div className='col-lg-2 col-sm-6 p-1'>
+                        <h5>Element</h5>
                         <ElementTemplate {...selectedProduct} />
                     </div>
-                    <div className='col-5'>
-                        <h6>Partner Skill</h6>
+                    <div className='col-lg-5  col-sm-6 p-1'>
+                        <h5>Partner Skill</h5>
                         <PartnerSkillTemplate {...selectedProduct} />
                     </div>
-                    <div className='col-5'>
-                        <h6>Drops</h6>
+                    <div className='col-lg-5 col-sm-12 p-1'>
+                        <h5>Drops</h5>
                         <div>
                             {selectedProduct.drops.split(',').map((drop, index) => (
                                 <>
-                                    <img src="assets/images/drops/wool.webp" alt={drop} className="thumbnail shadow-2 border-round" />
+                                    <img src={`assets/images/drops/${drop.replace(/^\s+|\s+$/g, '').replace(/\s/g, '_')}_icon.webp`} alt={drop} className="thumbnail shadow-2 border-round" />
                                     <span>{drop}</span>
                                 </>
                             ))}
                         </div>
                     </div>
 
-                    <div className='row pt-3'>
-                        <div className='col-12'>
-                            <h6>Professions</h6>
+
+                    <div className='d-flex flex-wrap pt-3' style={{ '--bs-gutter-x': '0' }}>
+                        <div className='col-12 p-1 small'>
+                            <h5>Professions</h5>
                             <div className='row' style={{ '--bs-gutter-x': '0' }}>
-                                <div className='row' style={{ '--bs-gutter-x': '0' }}>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Cooling ? 'bold' : 'normal', textAlign: 'right' }}>
-                                            Cooling
-                                            <img src="assets/images/professions/Cooling.webp" alt="Cooling" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Cooling || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Generating ? 'bold' : 'normal' }}>
-                                            Electricity:
-                                            <img src="assets/images/professions/Electricity.webp" alt="Electricity" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Generating || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Farming ? 'bold' : 'normal' }}>
-                                            Farming:
-                                            <img src="assets/images/professions/Farming.webp" alt="Farming" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Farming || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Gathering ? 'bold' : 'normal' }}>
-                                            Gathering:
-                                            <img src="assets/images/professions/Gathering.webp" alt="Gathering" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Gathering || 0}
-                                        </strong>
-                                    </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Cooling ? 'bold' : 'normal', textAlign: 'right' }}>
+                                        Cooling
+                                        <img src="assets/images/professions/Cooling.webp" alt="Cooling" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Cooling || 0}
+                                    </strong>
                                 </div>
-                                <div className='row' style={{ '--bs-gutter-x': '0' }}>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Handiwork ? 'bold' : 'normal' }}>
-                                            Handiwork:
-                                            <img src="assets/images/professions/Handiwork.webp" alt="Handiwork" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Handiwork || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Kindling ? 'bold' : 'normal' }}>
-                                            Kindling:
-                                            <img src="assets/images/professions/Kindling.webp" alt="Kindling" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Kindling || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Lumbering ? 'bold' : 'normal' }}>
-                                            Lumbering:
-                                            <img src="assets/images/professions/Lumbering.webp" alt="Lumbering" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Lumbering || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Medicine ? 'bold' : 'normal' }}>
-                                            Medicine:
-                                            <img src="assets/images/professions/Medicine.webp" alt="Medicine" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Medicine || 0}
-                                        </strong>
-                                    </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Generating ? 'bold' : 'normal' }}>
+                                        Electricity:
+                                        <img src="assets/images/professions/Electricity.webp" alt="Electricity" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Generating || 0}
+                                    </strong>
                                 </div>
-                                <div className='row' style={{ '--bs-gutter-x': '0' }}>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Mining ? 'bold' : 'normal' }}>
-                                            Mining:
-                                            <img src="assets/images/professions/Mining.webp" alt="Mining" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Mining || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Planting ? 'bold' : 'normal' }}>
-                                            Planting:
-                                            <img src="assets/images/professions/Planting.webp" alt="Planting" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Planting || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Transporting ? 'bold' : 'normal' }}>
-                                            Transporting:
-                                            <img src="assets/images/professions/Transporting.webp" alt="Transporting" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Transporting || 0}
-                                        </strong>
-                                    </div>
-                                    <div className='col-3'>
-                                        <strong style={{ fontWeight: selectedProduct.Watering ? 'bold' : 'normal' }}>
-                                            Watering:
-                                            <img src="assets/images/professions/Watering.webp" alt="Watering" className="thumbnail shadow-2 border-round" />
-                                            {selectedProduct.Watering || 0}
-                                        </strong>
-                                    </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Farming ? 'bold' : 'normal' }}>
+                                        Farming:
+                                        <img src="assets/images/professions/Farming.webp" alt="Farming" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Farming || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Gathering ? 'bold' : 'normal' }}>
+                                        Gathering:
+                                        <img src="assets/images/professions/Gathering.webp" alt="Gathering" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Gathering || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Handiwork ? 'bold' : 'normal' }}>
+                                        Handiwork:
+                                        <img src="assets/images/professions/Handiwork.webp" alt="Handiwork" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Handiwork || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Kindling ? 'bold' : 'normal' }}>
+                                        Kindling:
+                                        <img src="assets/images/professions/Kindling.webp" alt="Kindling" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Kindling || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Lumbering ? 'bold' : 'normal' }}>
+                                        Lumbering:
+                                        <img src="assets/images/professions/Lumbering.webp" alt="Lumbering" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Lumbering || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Medicine ? 'bold' : 'normal' }}>
+                                        Medicine:
+                                        <img src="assets/images/professions/Medicine.webp" alt="Medicine" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Medicine || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Mining ? 'bold' : 'normal' }}>
+                                        Mining:
+                                        <img src="assets/images/professions/Mining.webp" alt="Mining" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Mining || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Planting ? 'bold' : 'normal' }}>
+                                        Planting:
+                                        <img src="assets/images/professions/Planting.webp" alt="Planting" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Planting || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Transporting ? 'bold' : 'normal' }}>
+                                        Transporting:
+                                        <img src="assets/images/professions/Transporting.webp" alt="Transporting" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Transporting || 0}
+                                    </strong>
+                                </div>
+                                <div className='col-lg-3 col-sm-4'>
+                                    <strong style={{ fontWeight: selectedProduct.Watering ? 'bold' : 'normal' }}>
+                                        Watering:
+                                        <img src="assets/images/professions/Watering.webp" alt="Watering" className="thumbnail shadow-2 border-round" />
+                                        {selectedProduct.Watering || 0}
+                                    </strong>
                                 </div>
                             </div>
                         </div>

@@ -12,6 +12,65 @@
     color: var(--text-color);
 }
 
+html {
+    background-color: var(--surface-a);
+}
+
 .text {
     color: var(--text-color);
+}
+
+#root {
+    background-color: var(--surface-a);
+}
+
+// Large displays (4K)
+@media (min-width: 2000px) {
+    #Content {
+        width: 70%;
+        margin: 0 auto;
+        background-color: var(--surface-a);
+    }
+}
+
+#modal {
+    width: 50vw;
+}
+
+.no-pad-btn {
+    --bs-btn-padding-x: .1 rem !important;
+    --bs-btn-padding-y: .1 rem !important;
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    #modal {
+        width: 80vw;
+    }
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+    #modal {
+        width: 65vw;
+    }
+}
+
+// Large devices (desktops, less than 1200px)
+@media (max-width: 1254px) {
+    .p-datatable .p-sortable-column .p-sortable-column-icon {
+        margin-left: 0.0rem;
+    }
+
+    .p-datatable.p-datatable-sm .p-datatable-tbody>tr>td {
+        padding: 0.1rem 0.1rem;
+    }
+
+    .p-datatable.p-datatable-sm .p-datatable-thead>tr>th {
+        padding: 0.0rem 0.0rem;
+    }
+
+    #modal {
+        width: 60vw;
+    }
 }

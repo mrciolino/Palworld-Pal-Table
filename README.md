@@ -11,9 +11,8 @@ PalTable is a web application that provides a table of information in Palworld. 
 Visit the website: https://paltable.onrender.com/
 
 </center>
-
-TODO: filtering the drops and the partner skill type
-TODO: design row dialog modal
-TODO: make mobile friendly
+ 
+TODO: get all the habitats pictures
+dragon sorting bug
 
 Built with React, Primereact, and Bootstrap
