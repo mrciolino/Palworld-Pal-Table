@@ -82,7 +82,7 @@ function ElementTemplate(product) {
                 {elements.map((element, index) => {
                     return (
                         <div key={index} className="text-center">
-                            <img src={`assets/images/elements/palworld-${element[0]}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round" width="40" height="40" />
+                            <img src={`assets/images/elements/palworld-${element[0].toLowerCase()}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round" width="40" height="40" />
                         </div>
                     );
                 })}
