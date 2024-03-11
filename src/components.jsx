@@ -65,13 +65,13 @@ function ElementTemplate(product) {
                 {elements.map((element, index) => {
                     return (
                         <div key={index} className="text-center">
-                            <img src={`assets/images/elements/palworld-${element[2]}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round" width="40" height="40" />
+                            <img src={`assets/images/elements/palworld-${element[2].toLowerCase()}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round" width="40" height="40" />
                             -&gt;
-                            <img src={`assets/images/elements/palworld-${element[0]}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round img-fluid" width="40" height="40" />
+                            <img src={`assets/images/elements/palworld-${element[0].toLowerCase()}-element.webp`} alt={element[0]} className="w-6rem shadow-2 border-round img-fluid" width="40" height="40" />
                             -&gt;
                             {element[1].map((strongElement, index) => {
                                 return (
-                                    <img key={index} src={`assets/images/elements/palworld-${strongElement}-element.webp`} alt={strongElement} className="w-6rem shadow-2 border-round" width="40" height="40" />
+                                    <img key={index} src={`assets/images/elements/palworld-${strongElement.toLowerCase()}-element.webp`} alt={strongElement} className="w-6rem shadow-2 border-round" width="40" height="40" />
                                 );
                             })}
                         </div>
@@ -104,37 +104,16 @@ const PalDialogContent = ({ selectedProduct }) => {
                 </div>
 
                 <div className="col-lg-6 col-sm-6 p-3">
-                    <ul class="nav nav-pills mb-3 justify-content-around" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="day" data-bs-toggle="pill" data-bs-target="#pills-day" type="button" role="tab" aria-controls="pills-day" aria-selected="true">Day</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="night" data-bs-toggle="pill" data-bs-target="#pills-night" type="button" role="tab" aria-controls="pills-night" aria-selected="false">Night</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="pills-day" role="tabpanel" aria-labelledby="day">
-                            <img src="assets/images/habitat/Lamball_Day_Habitat.webp" alt="Blank" className="w-6rem shadow-2 border-round img-fluid" />
-                        </div>
-                        <div class="tab-pane fade" id="pills-night" role="tabpanel" aria-labelledby="night">
-                            <img src="assets/images/habitat/Lamball_Night_Habitat.webp" alt="Blank" className="w-6rem shadow-2 border-round img-fluid" />
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-
-            <div className="d-flex flex-wrap">
-                <div className='row' style={{ '--bs-gutter-x': '0' }}>
-                    <div className='col-lg-2 col-sm-6 p-1'>
+                    <div className='col-lg-12 col-sm-12 p-1'>
                         <h5>Element</h5>
                         <ElementTemplate {...selectedProduct} />
                     </div>
-                    <div className='col-lg-5  col-sm-6 p-1'>
+                    <div className='col-lg-12 col-sm-12 p-1'>
                         <h5>Partner Skill</h5>
                         <PartnerSkillTemplate {...selectedProduct} />
                     </div>
-                    <div className='col-lg-5 col-sm-12 p-1'>
+                    <div className='col-lg-12 col-sm-12 p-1'>
                         <h5>Drops</h5>
                         <div>
                             {selectedProduct.drops.split(',').map((drop, index) => (
@@ -145,8 +124,12 @@ const PalDialogContent = ({ selectedProduct }) => {
                             ))}
                         </div>
                     </div>
+                </div>
 
+            </div>
 
+            <div className="d-flex flex-wrap">
+                <div className='row' style={{ '--bs-gutter-x': '0' }}>
                     <div className='d-flex flex-wrap pt-3' style={{ '--bs-gutter-x': '0' }}>
                         <div className='col-12 p-1 small'>
                             <h5>Professions</h5>

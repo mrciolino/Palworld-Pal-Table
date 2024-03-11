@@ -12,7 +12,6 @@ Visit the website: https://paltable.onrender.com/
 
 </center>
  
-TODO: get all the habitats pictures
 dragon sorting bug
 
 Built with React, Primereact, and Bootstrap

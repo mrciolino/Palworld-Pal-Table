@@ -12,8 +12,6 @@ import { Dialog } from 'primereact/dialog';
 import 'primeicons/primeicons.css';
 import './App.scss';
 
-// eslint-disable-next-line no-unused-vars
-import bootstrap from 'bootstrap'
 
 export default function App() {
 
@@ -36,10 +34,10 @@ export default function App() {
   // row select
   const [displayDialog, setDisplayDialog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
- 
+
   const onHide = () => {
-    setDisplayDialog(false);
     setSelectedProduct(null);
+    setDisplayDialog(false);
   };
 
   useEffect(() => {
@@ -113,13 +111,21 @@ export default function App() {
       <div>
         <h1 className="text-center p-3">PalTable</h1>
         <div className="text-center p-1 small txt">
-          Ctrl-Click on Multiple Columns to Sort <div className="vr"></div> Toggle the Element Buttons to Filter <div className="vr"></div> Filter by Partner Skill <icon className="pi pi-filter" style={{ fontSize: '0.75rem' }}></icon>  <div className="vr"></div> Click on Pal Image for More Information
+          Ctrl-Click on Multiple Columns to Sort <div className="vr"></div> Toggle the Element Buttons to Filter <div className="vr"></div> Filter by Partner Skill <i className="pi pi-filter" style={{ fontSize: '0.75rem' }}></i>  <div className="vr"></div> Click on Pal Image for More Information
         </div>
       </div>
 
       <div className="text-center p-3 flex">
         {Elements.map((element) => (
-          <Button key={element} className={`btn btn-sm m-1 ${selectedElements.includes(element) ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => toggleElement(element)}>
+          <Button
+            key={element}
+            className={`btn btn-sm m-1 ${selectedElements.includes(element) ? 'btn-dark' : 'btn-outline-dark'}`}
+            onClick={() => toggleElement(element)}
+            style={{
+              backgroundColor: selectedElements.includes(element) ? (darkMode ? '#282c34' : '#697489') : 'transparent',
+              color: selectedElements.includes(element) ? '#fff' : (darkMode ? '#282c34' : '#000')
+            }}
+          >
             <img className="img-fluid" src={`assets/images/elements/palworld-${element.toLowerCase()}-element.webp`} alt={element} width="40" height="40" />
           </Button>
         ))}
@@ -131,6 +137,7 @@ export default function App() {
         <Column field="paldeck" header="# &nbsp;" sortable bodyStyle={{ textAlign: 'center' }} style={{ width: '5%' }}></Column>
         <Column header="Pal &nbsp;" body={NameImageTemplate} sortField='name' sortable style={{ width: '5%' }} sortMode></Column>
         <Column header="Element &nbsp;" body={ElementTemplate} style={{ width: '5%' }}></Column>
+
         <Column
           header={
             <div className='justify-content-between'>

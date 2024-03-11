@@ -24,15 +24,6 @@ html {
     background-color: var(--surface-a);
 }
 
-// Large displays (4K)
-@media (min-width: 2000px) {
-    #Content {
-        width: 70%;
-        margin: 0 auto;
-        background-color: var(--surface-a);
-    }
-}
-
 #modal {
     width: 50vw;
 }
@@ -45,7 +36,7 @@ html {
 // Small devices (landscape phones, less than 768px)
 @media (max-width: 767.98px) {
     #modal {
-        width: 80vw;
+        width: 85vw;
     }
 }
 
@@ -57,7 +48,7 @@ html {
 }
 
 // Large devices (desktops, less than 1200px)
-@media (max-width: 1254px) {
+@media (max-width: 1425.98px) {
     .p-datatable .p-sortable-column .p-sortable-column-icon {
         margin-left: 0.0rem;
     }
@@ -72,5 +63,18 @@ html {
 
     #modal {
         width: 60vw;
+    }
+}
+
+// XX-Large devices (larger desktops, 1400px and up)
+@media (min-width: 1975px) {
+    #Content {
+        width: 70%;
+        margin: 0 auto;
+        background-color: var(--surface-a);
+    }
+
+    #modal {
+        width: 40vw !important;
     }
 }
