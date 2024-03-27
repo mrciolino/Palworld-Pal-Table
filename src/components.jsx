@@ -91,6 +91,21 @@ function ElementTemplate(product) {
     );
 };
 
+const PalInformation = ({ selectedProduct }) => {
+    if (!selectedProduct) {
+        return null;
+    }
+    return (
+        <div key={selectedProduct.name} >
+            Pal Information&nbsp; <div className="vr"></div> &nbsp;
+            <a href={`https://palworld.fandom.com/wiki/${selectedProduct.name}`} target="_blank" rel="noopener noreferrer" className="small">
+                More Information
+            </a>
+        </div>
+
+    );
+};
+
 const PalDialogContent = ({ selectedProduct }) => {
     return (
         <>
@@ -117,10 +132,10 @@ const PalDialogContent = ({ selectedProduct }) => {
                         <h5>Drops</h5>
                         <div>
                             {selectedProduct.drops.split(',').map((drop, index) => (
-                                <>
+                                <div key={index}>
                                     <img src={`assets/images/drops/${drop.replace(/^\s+|\s+$/g, '').replace(/\s/g, '_')}_icon.webp`} alt={drop} className="thumbnail shadow-2 border-round" />
                                     <span>{drop}</span>
-                                </>
+                                </div>
                             ))}
                         </div>
                     </div>
@@ -227,4 +242,4 @@ const PalDialogContent = ({ selectedProduct }) => {
     );
 };
 
-export { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate, PalDialogContent };
+export { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate, PalDialogContent, PalInformation };

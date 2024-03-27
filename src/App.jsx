@@ -1,4 +1,4 @@
-import { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate, PalDialogContent } from './components.jsx';
+import { NameImageTemplate, ElementTemplate, PartnerSkillTemplate, ProfessionTemplate, PalDialogContent, PalInformation } from './components.jsx';
 import React, { useState, useEffect, useRef } from 'react';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { OverlayPanel } from 'primereact/overlaypanel';
@@ -131,7 +131,11 @@ export default function App() {
         ))}
       </div>
 
-      <Dialog id="modal" visible={displayDialog} header="Pal Information" modal onHide={onHide} footer={<Button icon="pi pi-times" onClick={onHide} label="Close" className="p-button-text" />}>  {selectedProduct && <PalDialogContent selectedProduct={selectedProduct} />}</Dialog>
+      <Dialog id="modal" visible={displayDialog} modal onHide={onHide}
+        header={<PalInformation selectedProduct={selectedProduct} />}
+        footer={<Button icon="pi pi-times" onClick={onHide} label="Close" className="p-button-text" />}>
+        {selectedProduct && <PalDialogContent selectedProduct={selectedProduct} />}
+      </Dialog>
 
       <DataTable value={filteredPalsData} stripedRows sortMode="multiple" paginator rows={25} rowsPerPageOptions={[25, 111]} size="small" tableStyle={{ minWidth: '1rem', padding: '0 0' }} selectionMode="single" selection={selectedProduct} dataKey="name" onSelectionChange={(e) => setSelectedProduct(e.value)}>
         <Column field="paldeck" header="# &nbsp;" sortable bodyStyle={{ textAlign: 'center' }} style={{ width: '5%' }}></Column>
